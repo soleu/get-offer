@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class GetOfferApplication
 
 fun main(args: Array<String>) {
-	runApplication<GetOfferApplication>(*args)
+    runApplication<GetOfferApplication>(*args)
 }
