@@ -10,8 +10,6 @@ import jakarta.persistence.Id
 class User(
     private val nickname: String,
 
-    private val userId: Long,
-
     private val userImage: String? = null
 
 ) : AuditingTimeEntity() {
