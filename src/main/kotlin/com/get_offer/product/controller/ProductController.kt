@@ -21,7 +21,7 @@ class ProductController(
     }
 
     @GetMapping("{id}/detail")
-    fun getProductDetail(@PathVariable id: String, @RequestParam userId: String): ProductDetailDto {
-        return productService.getProductDetail(id.toLong(), userId.toLong())
+    fun getProductDetail(@PathVariable id: String, @RequestParam userId: String): ApiResponse<ProductDetailDto> {
+        return ApiResponse.success(productService.getProductDetail(id.toLong(), userId.toLong()))
     }
 }

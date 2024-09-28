@@ -5,6 +5,7 @@ import com.get_offer.product.domain.ProductStatus
 import java.time.LocalDateTime
 
 data class ProductListDto(
+    val id: Long?,
     val writerId: Long,
     val name: String,
     val category: Category,

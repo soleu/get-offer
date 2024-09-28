@@ -1,5 +1,3 @@
-import org.springframework.http.HttpStatus
-
 class ApiResponse<T>(
     val status: String,
     val message: String? = null,
@@ -13,7 +11,7 @@ class ApiResponse<T>(
             )
         }
 
-        fun <T> error(message: String, statusCode: HttpStatus): ApiResponse<T> {
+        fun <T> error(message: String): ApiResponse<T> {
             return ApiResponse(
                 status = "ERROR",
                 message = message,

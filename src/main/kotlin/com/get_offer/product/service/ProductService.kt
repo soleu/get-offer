@@ -20,6 +20,7 @@ class ProductService(
             val imageList = x.images.split(";")
 
             ProductListDto(
+                id = x.id,
                 writerId = x.writerId,
                 name = x.name,
                 category = x.category,

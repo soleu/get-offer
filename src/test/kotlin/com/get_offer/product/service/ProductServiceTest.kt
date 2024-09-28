@@ -59,11 +59,12 @@ class ProductServiceTest {
             LocalDateTime.now()
         )
 
-        `when`(mockProductRepository.findAllByStatusInOrderByEndDateDesc(any())).thenReturn(
-            listOf(
-                givenProduct,
-                givenProduct2
+        `when`(
+            mockProductRepository.findAllByStatusInOrderByEndDateDesc(
+                listOf(ProductStatus.IN_PROGRESS, ProductStatus.WAIT)
             )
+        ).thenReturn(
+            listOf(givenProduct, givenProduct2)
         )
 
         // when
