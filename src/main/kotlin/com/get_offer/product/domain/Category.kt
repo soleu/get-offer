@@ -1,4 +1,4 @@
-package com.get_offer.product
+package com.get_offer.product.domain
 
 enum class Category(
     private val nameKr: String,
