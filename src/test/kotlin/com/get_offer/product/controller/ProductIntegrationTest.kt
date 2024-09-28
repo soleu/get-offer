@@ -23,7 +23,7 @@ class ProductIntegrationTest(
     @Test
     fun activeProductListControllerTest() {
         mockMvc.perform(
-            get("/products/activeList").param("userId", "1")
+            get("/products").param("userId", "1")
         ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(jsonPath("$.size()").value(1))
             .andExpect(jsonPath("$[0].writerId").value("1")).andExpect(jsonPath("$[0].name").value("nintendo"))
             .andExpect(jsonPath("$[0].category").value("GAMES")).andExpect(jsonPath("$[0].thumbNail").value("png"))

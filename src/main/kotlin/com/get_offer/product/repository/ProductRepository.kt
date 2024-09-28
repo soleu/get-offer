@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProductRepository : JpaRepository<Product, Long> {
-    fun findAllByStatusInOrderByEndDateDesc(statuses: List<ProductStatus?>?): List<Product>
+    fun findAllByStatusInOrderByEndDateDesc(statuses: List<ProductStatus>): List<Product>
 }

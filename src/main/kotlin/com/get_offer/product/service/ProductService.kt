@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service
 class ProductService(
     private val productRepository: ProductRepository,
 ) {
-    fun getActiveProductList(userId: Long): List<ActiveProductListDto> {
+    fun getActiveProductList(userId: Long): List<ProductListDto> {
         val productList =
             productRepository.findAllByStatusInOrderByEndDateDesc(listOf(ProductStatus.IN_PROGRESS, ProductStatus.WAIT))
 
         return productList.map { x ->
             val imageList = x.images.split(";")
 
-            ActiveProductListDto(
+            ProductListDto(
                 writerId = x.writerId,
                 name = x.name,
                 category = x.category,
