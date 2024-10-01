@@ -1,14 +1,15 @@
 package com.get_offer.product.service
 
 import com.get_offer.product.domain.Category
+import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductStatus
+import com.get_offer.product.domain.WriterVo
+import com.get_offer.user.domain.User
 import java.time.LocalDateTime
 
 data class ProductDetailDto(
     val id: Long?,
-    val writerId: Long,
-    val writerNickname: String,
-    val writerProfileImg: String,
+    val writer: WriterVo,
     val name: String,
     val category: Category,
     val images: List<String>,
@@ -19,4 +20,23 @@ data class ProductDetailDto(
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
     val isMine: Boolean,
-)
+) {
+    companion object {
+        fun of(product: Product, writer: User, userId: Long?): ProductDetailDto {
+            return ProductDetailDto(
+                id = product.id,
+                writer = WriterVo(writer.id, writer.nickname, writer.image),
+                name = product.name,
+                category = product.category,
+                images = product.images.images,
+                description = product.description,
+                startPrice = product.startPrice,
+                currentPrice = product.currentPrice,
+                status = product.status,
+                startDate = product.startDate,
+                endDate = product.endDate,
+                isMine = product.writerId == userId,
+            )
+        }
+    }
+}

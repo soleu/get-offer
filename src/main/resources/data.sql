@@ -9,5 +9,6 @@ VALUES (2, 'test2', 'https://drive.google.com/file/d/1R9EIOoEWWgPUhY6e-t4VFuqMgk
 INSERT INTO PRODUCTS (ID, WRITER_ID, NAME, DESCRIPTION, CATEGORY, CURRENT_PRICE, START_PRICE, STATUS, START_DATE,
                       END_DATE, CREATED_AT, UPDATED_AT, IMAGES)
 VALUES (1, 1, 'nintendo', '닌텐도 새 제품', 'GAMES', 10000, 5000, 'IN_PROGRESS', '2024-01-02 00:00:00', '2024-01-04 00:00:00',
-        '2024-01-02 00:00:00', '2024-01-02 00:00:00', 'png;jpg');
+        '2024-01-02 00:00:00', '2024-01-02 00:00:00',
+        '{"images":["https://picsum.photos/200/300","https://picsum.photos/200/300"]}');
 

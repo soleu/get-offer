@@ -2,6 +2,7 @@ package com.get_offer.product.service
 
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product
+import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.User
@@ -35,9 +36,10 @@ class ProductServiceTest {
         // given
         val givenProduct = Product(
             1L,
+            1L,
             "product",
             Category.GAMES,
-            "https://image1.png;https://image2.png",
+            ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
             "desc for product",
             10000,
             15000,
@@ -48,9 +50,10 @@ class ProductServiceTest {
 
         val givenProduct2 = Product(
             2L,
+            2L,
             "product2",
             Category.SPORTS,
-            "https://image3.png;https://image4.png",
+            ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
             "desc for product",
             12000,
             15500,
@@ -68,17 +71,17 @@ class ProductServiceTest {
         )
 
         // when
-        val sut = productService.getProductList(1L)
+        val result = productService.getProductList(1L)
 
         // then
-        Assertions.assertThat(sut[0].name).isEqualTo("product")
-        Assertions.assertThat(sut[1].name).isEqualTo("product2")
-        Assertions.assertThat(sut[0].thumbNail).isEqualTo("https://image1.png")
-        Assertions.assertThat(sut[1].thumbNail).isEqualTo("https://image3.png")
-        Assertions.assertThat(sut[0].status).isEqualTo(ProductStatus.IN_PROGRESS)
-        Assertions.assertThat(sut[1].status).isEqualTo(ProductStatus.WAIT)
-        Assertions.assertThat(sut[0].isMine).isEqualTo(true)
-        Assertions.assertThat(sut[1].isMine).isEqualTo(false)
+        Assertions.assertThat(result[0].name).isEqualTo("product")
+        Assertions.assertThat(result[1].name).isEqualTo("product2")
+        Assertions.assertThat(result[0].thumbnail).isEqualTo("https://image1.png")
+        Assertions.assertThat(result[1].thumbnail).isEqualTo("https://image1.png")
+        Assertions.assertThat(result[0].status).isEqualTo(ProductStatus.IN_PROGRESS)
+        Assertions.assertThat(result[1].status).isEqualTo(ProductStatus.WAIT)
+        Assertions.assertThat(result[0].isMine).isEqualTo(true)
+        Assertions.assertThat(result[1].isMine).isEqualTo(false)
     }
 
     @Test
@@ -87,9 +90,10 @@ class ProductServiceTest {
         // given
         val givenProduct = Product(
             1L,
+            1L,
             "product",
             Category.GAMES,
-            "https://image1.png;https://image2.png",
+            ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
             "desc for product",
             10000,
             15000,
@@ -99,7 +103,7 @@ class ProductServiceTest {
         )
 
         val givenUser = User(
-            "user", "https://image1.png"
+            1L, "user", "https://image1.png"
         )
 
         `when`(mockProductRepository.findById(any())).thenReturn(Optional.of(givenProduct))

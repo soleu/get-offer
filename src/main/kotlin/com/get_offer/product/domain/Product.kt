@@ -1,6 +1,8 @@
 package com.get_offer.product.domain
 
 import com.get_offer.common.AuditingTimeEntity
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -13,6 +15,10 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "PRODUCTS")
 class Product(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
     val writerId: Long,
 
     val name: String,
@@ -20,7 +26,9 @@ class Product(
     @Enumerated(EnumType.STRING)
     val category: Category,
 
-    val images: String,
+    @Convert(converter = ProductImagesConverter::class)
+    @Column(name = "IMAGES")
+    val images: ProductImagesVo,
 
     val description: String,
 
@@ -34,8 +42,4 @@ class Product(
     var startDate: LocalDateTime,
 
     var endDate: LocalDateTime
-) : AuditingTimeEntity() {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-}
+) : AuditingTimeEntity()
