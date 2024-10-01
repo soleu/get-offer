@@ -11,9 +11,5 @@ class History(
     private val productId: Long,
     private val userId: Long,
     private val biddingPrice: Int,
-) : AuditingTimeEntity() {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long? = null
-
-}
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private val id: Long? = null
+) : AuditingTimeEntity()

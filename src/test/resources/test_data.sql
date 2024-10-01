@@ -14,3 +14,13 @@ INSERT INTO PRODUCTS (ID, WRITER_ID, NAME, DESCRIPTION, CATEGORY, CURRENT_PRICE,
 VALUES (1, 1, 'nintendo', '닌텐도 새 제품', 'GAMES', 10000, 5000, 'IN_PROGRESS', '2024-01-02 00:00:00', '2024-01-04 00:00:00',
         '2024-01-02 00:00:00', '2024-01-02 00:00:00',
         '{"images":["https://picsum.photos/200/300","https://picsum.photos/200/300"]}');
+INSERT INTO PRODUCTS (ID, WRITER_ID, NAME, DESCRIPTION, CATEGORY, CURRENT_PRICE, START_PRICE, STATUS, START_DATE,
+                      END_DATE, CREATED_AT, UPDATED_AT, IMAGES)
+VALUES (2, 1, 'gucci belt', '어쩌구', 'CLOTHES', 230000, 50000, 'WAIT', '2024-01-03 00:00:00', '2024-01-04 00:00:00',
+        '2024-01-02 00:00:00', '2024-01-02 00:00:00',
+        '{"images":["https://picsum.photos/200/300","https://picsum.photos/200/300"]}');
+INSERT INTO PRODUCTS (ID, WRITER_ID, NAME, DESCRIPTION, CATEGORY, CURRENT_PRICE, START_PRICE, STATUS, START_DATE,
+                      END_DATE, CREATED_AT, UPDATED_AT, IMAGES)
+VALUES (3, 1, 'ikea chair', '저쩌', 'FURNITURE', 43000, 8000, 'COMPLETED', '2024-01-06 00:00:00', '2024-01-04 00:00:00',
+        '2024-01-02 00:00:00', '2024-01-02 00:00:00',
+        '{"images":["https://picsum.photos/200/300","https://picsum.photos/200/300"]}');
