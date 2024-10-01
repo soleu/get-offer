@@ -2,18 +2,19 @@ package com.get_offer.common.exception
 
 import ApiResponse
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@ControllerAdvice
+@RestControllerAdvice
 class ExceptionControllerAdvice {
     @ExceptionHandler
-    fun handleIllegalStateException(ex: IllegalStateException): ApiResponse<Any> {
-        return ApiResponse.error(ex.message ?: "DEFAULT ERROR", HttpStatus.BAD_REQUEST)
+    fun handleIllegalStateException(ex: IllegalStateException): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(ex.message ?: "DEFAULT ERROR"))
     }
 
     @ExceptionHandler
-    fun handleNotFoundException(ex: NotFoundException): ApiResponse<Any> {
-        return ApiResponse.error(ex.message, HttpStatus.NOT_FOUND)
+    fun handleNotFoundException(ex: NotFoundException): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(ex.message))
     }
 }
