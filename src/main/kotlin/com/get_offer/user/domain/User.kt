@@ -10,12 +10,11 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "USERS")
 class User(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-
     val nickname: String,
 
     val image: String = "https://drive.google.com/file/d/1g5yH7rq4_6bMrahRUD3fMoFHIcVLY18y/view?usp=sharing",
 
-    ) : AuditingTimeEntity()
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+) : AuditingTimeEntity()

@@ -15,10 +15,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "PRODUCTS")
 class Product(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-
     val writerId: Long,
 
     val name: String,
@@ -41,5 +37,9 @@ class Product(
 
     var startDate: LocalDateTime,
 
-    var endDate: LocalDateTime
+    var endDate: LocalDateTime,
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 ) : AuditingTimeEntity()
