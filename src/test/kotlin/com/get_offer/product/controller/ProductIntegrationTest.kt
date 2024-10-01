@@ -21,19 +21,25 @@ class ProductIntegrationTest(
     @Test
     fun productListIntegrationTest() {
         mockMvc.perform(
-            get("/products").param("userId", "1")
+            get("/products")
+                .param("userId", "1")
+                .param("page", "0")
+                .param("size", "30")
         ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk)
-            .andExpect(jsonPath("$.size()").value(3))
-            .andExpect(jsonPath("$.data[0].id").value("1"))
-            .andExpect(jsonPath("$.data[0].writerId").value("1"))
-            .andExpect(jsonPath("$.data[0].name").value("nintendo"))
-            .andExpect(jsonPath("$.data[0].category").value("GAMES"))
-            .andExpect(jsonPath("$.data[0].thumbnail").value("https://picsum.photos/200/300"))
-            .andExpect(jsonPath("$.data[0].currentPrice").value("10000"))
-            .andExpect(jsonPath("$.data[0].status").value("IN_PROGRESS"))
-            .andExpect(jsonPath("$.data[0].startDate").value("2024-01-02T00:00:00"))
-            .andExpect(jsonPath("$.data[0].endDate").value("2024-01-04T00:00:00"))
-            .andExpect(jsonPath("$.data[0].isMine").value("true"))
+            .andExpect(jsonPath("$.data.pageNumber").value(0))
+            .andExpect(jsonPath("$.data.pageSize").value(30))
+            .andExpect(jsonPath("$.data.totalElements").value(1))
+            .andExpect(jsonPath("$.data.totalPages").value(1))
+            .andExpect(jsonPath("$.data.content[0].id").value("1"))
+            .andExpect(jsonPath("$.data.content[0].writerId").value("1"))
+            .andExpect(jsonPath("$.data.content[0].name").value("nintendo"))
+            .andExpect(jsonPath("$.data.content[0].category").value("GAMES"))
+            .andExpect(jsonPath("$.data.content[0].thumbnail").value("https://picsum.photos/200/300"))
+            .andExpect(jsonPath("$.data.content[0].currentPrice").value("10000"))
+            .andExpect(jsonPath("$.data.content[0].status").value("IN_PROGRESS"))
+            .andExpect(jsonPath("$.data.content[0].startDate").value("2024-01-02T00:00:00"))
+            .andExpect(jsonPath("$.data.content[0].endDate").value("2024-01-04T00:00:00"))
+            .andExpect(jsonPath("$.data.content[0].isMine").value("true"))
     }
 
     @Test

@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.any
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 
 class ProductServiceTest {
     private lateinit var productService: ProductService
@@ -36,7 +38,6 @@ class ProductServiceTest {
         // given
         val givenProduct = Product(
             1L,
-            1L,
             "product",
             Category.GAMES,
             ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
@@ -50,7 +51,6 @@ class ProductServiceTest {
 
         val givenProduct2 = Product(
             2L,
-            2L,
             "product2",
             Category.SPORTS,
             ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
@@ -61,35 +61,37 @@ class ProductServiceTest {
             LocalDateTime.now(),
             LocalDateTime.now()
         )
+        val pageable = PageRequest.of(0, 3)
+        val items = listOf(givenProduct, givenProduct2)
 
         `when`(
             mockProductRepository.findAllByStatusInOrderByEndDateDesc(
-                listOf(ProductStatus.IN_PROGRESS, ProductStatus.WAIT)
+                listOf(ProductStatus.IN_PROGRESS, ProductStatus.WAIT),
+                pageable
             )
         ).thenReturn(
-            listOf(givenProduct, givenProduct2)
+            PageImpl(items, pageable, items.size.toLong())
         )
 
         // when
-        val result = productService.getProductList(1L)
+        val result = productService.getProductList(1L, pageable)
 
         // then
-        Assertions.assertThat(result[0].name).isEqualTo("product")
-        Assertions.assertThat(result[1].name).isEqualTo("product2")
-        Assertions.assertThat(result[0].thumbnail).isEqualTo("https://image1.png")
-        Assertions.assertThat(result[1].thumbnail).isEqualTo("https://image1.png")
-        Assertions.assertThat(result[0].status).isEqualTo(ProductStatus.IN_PROGRESS)
-        Assertions.assertThat(result[1].status).isEqualTo(ProductStatus.WAIT)
-        Assertions.assertThat(result[0].isMine).isEqualTo(true)
-        Assertions.assertThat(result[1].isMine).isEqualTo(false)
+        Assertions.assertThat(result.content[0].name).isEqualTo("product")
+        Assertions.assertThat(result.content[1].name).isEqualTo("product2")
+        Assertions.assertThat(result.content[0].thumbnail).isEqualTo("https://image1.png")
+        Assertions.assertThat(result.content[1].thumbnail).isEqualTo("https://image1.png")
+        Assertions.assertThat(result.content[0].status).isEqualTo(ProductStatus.IN_PROGRESS)
+        Assertions.assertThat(result.content[1].status).isEqualTo(ProductStatus.WAIT)
+        Assertions.assertThat(result.content[0].isMine).isEqualTo(true)
+        Assertions.assertThat(result.content[1].isMine).isEqualTo(false)
     }
 
     @Test
-    @DisplayName("DB에서 이미지리스트를 잘라가져온다.")
-    fun productDetailImageSplitToList() {
+    @DisplayName("상품상세 Dto 변환")
+    fun productDetailToDto() {
         // given
         val givenProduct = Product(
-            1L,
             1L,
             "product",
             Category.GAMES,
@@ -103,7 +105,7 @@ class ProductServiceTest {
         )
 
         val givenUser = User(
-            1L, "user", "https://image1.png"
+            "user", "https://image1.png"
         )
 
         `when`(mockProductRepository.findById(any())).thenReturn(Optional.of(givenProduct))

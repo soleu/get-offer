@@ -4,6 +4,7 @@ import ApiResponse
 import com.get_offer.product.service.ProductDetailDto
 import com.get_offer.product.service.ProductListDto
 import com.get_offer.product.service.ProductService
+import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,8 +17,16 @@ class ProductController(
     private val productService: ProductService
 ) {
     @GetMapping
-    fun getProductList(@RequestParam userId: String): ApiResponse<List<ProductListDto>> {
-        return ApiResponse.success(productService.getProductList(userId.toLong()))
+    fun getProductList(
+        @RequestParam userId: String, @RequestParam page: Int, @RequestParam size: Int
+    ): ApiResponse<PageResponse<ProductListDto>> {
+        return ApiResponse.success(
+            PageResponse.from(
+                productService.getProductList(
+                    userId.toLong(), PageRequest.of(page, size)
+                )
+            )
+        )
     }
 
     @GetMapping("{id}/detail")
