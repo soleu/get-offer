@@ -30,4 +30,10 @@ class ProductService(
 
         return ProductDetailDto.of(product, writer, userId)
     }
+
+    fun getSellHistory(id: Long): List<ProductListDto> {
+        val productList = productRepository.findAllByWriterId(id)
+
+        return productList.map { ProductListDto.of(it, id) }
+    }
 }

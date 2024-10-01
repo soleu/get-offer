@@ -33,4 +33,9 @@ class ProductController(
     fun getProductDetail(@PathVariable id: String, @RequestParam userId: String): ApiResponse<ProductDetailDto> {
         return ApiResponse.success(productService.getProductDetail(id.toLong(), userId.toLong()))
     }
+
+    @GetMapping("/sellHistory")
+    fun getUserSellHistory(@RequestParam userId: String): ApiResponse<List<ProductListDto>> {
+        return ApiResponse.success(productService.getSellHistory(userId.toLong()))
+    }
 }
