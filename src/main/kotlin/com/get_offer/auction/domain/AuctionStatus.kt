@@ -1,4 +1,4 @@
-package com.get_offer.auction_result.domain
+package com.get_offer.auction.domain
 
 enum class AuctionStatus {
     CANCELED, // 거래 취소

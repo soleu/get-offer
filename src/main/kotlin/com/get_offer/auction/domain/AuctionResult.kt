@@ -1,4 +1,4 @@
-package com.get_offer.auction_result.domain
+package com.get_offer.auction.domain
 
 import com.get_offer.common.AuditingTimeEntity
 import jakarta.persistence.Entity

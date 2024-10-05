@@ -1,4 +1,4 @@
-package com.get_offer.auction_result.domain
+package com.get_offer.auction.domain
 
 import com.get_offer.common.AuditingTimeEntity
 import jakarta.persistence.Entity
@@ -7,9 +7,11 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
-class History(
+@Table(name = "BIDS")
+class Bid(
     private val productId: Long,
 
     private val userId: Long,
