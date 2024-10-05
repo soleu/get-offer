@@ -30,6 +30,4 @@ class ProductService(
 
         return ProductDetailDto.of(product, writer, userId)
     }
-
-
 }
