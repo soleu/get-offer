@@ -27,7 +27,7 @@ class AuctionServiceTest {
     fun getSellHistoryReturnsDto() {
         val writerId = 1L
 
-        val givenProduct = TestFixtures.createProductInprogress(writerId)
+        val givenProduct = TestFixtures.createProductInProgress(writerId)
         val givenProduct2 = TestFixtures.createProductWait(writerId)
 
         // when
@@ -40,8 +40,8 @@ class AuctionServiceTest {
         Assertions.assertThat(result[0].id).isEqualTo(givenProduct.id)
         Assertions.assertThat(result[0].currentPrice).isEqualTo(givenProduct.currentPrice)
         Assertions.assertThat(result[0].writerId).isEqualTo(writerId)
-        Assertions.assertThat(result[1].id).isEqualTo(givenProduct.id)
-        Assertions.assertThat(result[1].currentPrice).isEqualTo(givenProduct.currentPrice)
+        Assertions.assertThat(result[1].id).isEqualTo(givenProduct2.id)
+        Assertions.assertThat(result[1].currentPrice).isEqualTo(givenProduct2.currentPrice)
         Assertions.assertThat(result[1].writerId).isEqualTo(writerId)
     }
 
@@ -51,7 +51,7 @@ class AuctionServiceTest {
         val buyerId = 2L
 
         val givenAuction = TestFixtures.createAuction(buyerId)
-        val givenProduct = TestFixtures.createProductInprogress(writerId)
+        val givenProduct = TestFixtures.createProductInProgress(writerId)
 
         `when`(mockAuctionRepository.findAllByBuyerIdOrderByCreatedAtDesc(buyerId))
             .thenReturn(listOf(givenAuction))
@@ -62,10 +62,10 @@ class AuctionServiceTest {
         val result = auctionService.getBuyHistory(buyerId)
 
         Assertions.assertThat(result.size).isEqualTo(1)
-        Assertions.assertThat(result[1].productId).isEqualTo(givenAuction.id)
-        Assertions.assertThat(result[1].buyerId).isEqualTo(givenAuction.buyerId)
-        Assertions.assertThat(result[1].finalPrice).isEqualTo(givenAuction.finalPrice)
-        Assertions.assertThat(result[1].writerId).isEqualTo(givenProduct.writerId)
+        Assertions.assertThat(result[0].productId).isEqualTo(givenAuction.id)
+        Assertions.assertThat(result[0].buyerId).isEqualTo(givenAuction.buyerId)
+        Assertions.assertThat(result[0].finalPrice).isEqualTo(givenAuction.finalPrice)
+        Assertions.assertThat(result[0].writerId).isEqualTo(givenProduct.writerId)
     }
 }
 

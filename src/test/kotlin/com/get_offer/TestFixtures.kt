@@ -9,7 +9,7 @@ import com.get_offer.product.domain.ProductStatus
 import java.time.LocalDateTime
 
 object TestFixtures {
-    fun createProductInprogress(userId: Long?): Product {
+    fun createProductInProgress(userId: Long?): Product {
         return Product(
             userId ?: 1L,
             "product",
