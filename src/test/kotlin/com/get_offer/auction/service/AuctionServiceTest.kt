@@ -51,7 +51,7 @@ class AuctionServiceTest {
         val buyerId = 2L
 
         val givenAuction = TestFixtures.createAuction(buyerId)
-        val givenProduct = TestFixtures.createProductInProgress(writerId)
+        val givenProduct = TestFixtures.createProductCompleted(writerId)
 
         `when`(mockAuctionRepository.findAllByBuyerIdOrderByCreatedAtDesc(buyerId))
             .thenReturn(listOf(givenAuction))

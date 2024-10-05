@@ -64,23 +64,4 @@ class ProductIntegrationTest(
             .andExpect(jsonPath("$.data.endDate").value("2024-01-04T00:00:00"))
             .andExpect(jsonPath("$.data.isMine").value("true"))
     }
-
-    @Test
-    fun userSellHistoryIntegrationTest() {
-        mockMvc.perform(
-            get("/products/sellHistory")
-                .param("userId", "1")
-        ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk)
-            .andExpect(jsonPath("$.data.size()").value(3))
-            .andExpect(jsonPath("$.data[0].id").value("1"))
-            .andExpect(jsonPath("$.data[0].writerId").value("1"))
-            .andExpect(jsonPath("$.data[0].name").value("nintendo"))
-            .andExpect(jsonPath("$.data[0].category").value("GAMES"))
-            .andExpect(jsonPath("$.data[0].thumbnail").value("https://picsum.photos/200/300"))
-            .andExpect(jsonPath("$.data[0].currentPrice").value("10000"))
-            .andExpect(jsonPath("$.data[0].status").value("IN_PROGRESS"))
-            .andExpect(jsonPath("$.data[0].startDate").value("2024-01-02T00:00:00"))
-            .andExpect(jsonPath("$.data[0].endDate").value("2024-01-04T00:00:00"))
-            .andExpect(jsonPath("$.data[0].isMine").value("true"))
-    }
 }

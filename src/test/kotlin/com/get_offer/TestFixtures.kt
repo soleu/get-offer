@@ -39,6 +39,21 @@ object TestFixtures {
         )
     }
 
+    fun createProductCompleted(userId: Long?): Product {
+        return Product(
+            userId ?: 3L,
+            "product3",
+            Category.SPORTS,
+            ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
+            "desc for product",
+            13000,
+            16500,
+            ProductStatus.COMPLETED,
+            LocalDateTime.now(),
+            LocalDateTime.now()
+        )
+    }
+
     fun createAuction(buyerId: Long?): AuctionResult {
         return AuctionResult(
             productId = 1L,

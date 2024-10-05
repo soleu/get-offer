@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 data class SellProductListDto(
     val id: Long?,
     val writerId: Long,
-    val name: String,
+    val title: String,
     val category: Category,
     val thumbnail: String,
     val currentPrice: Int,
@@ -22,7 +22,7 @@ data class SellProductListDto(
             return SellProductListDto(
                 id = product.id,
                 writerId = product.writerId,
-                name = product.title,
+                title = product.title,
                 category = product.category,
                 thumbnail = product.images.thumbnail(),
                 currentPrice = product.currentPrice,
