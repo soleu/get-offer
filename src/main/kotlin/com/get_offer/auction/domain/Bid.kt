@@ -14,7 +14,7 @@ import jakarta.persistence.Table
 class Bid(
     private val productId: Long,
 
-    private val userId: Long,
+    private val bidderId: Long,
 
     private val biddingPrice: Int,
 
