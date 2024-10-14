@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 class Product(
     val writerId: Long,
 
-    val name: String,
+    val title: String,
 
     @Enumerated(EnumType.STRING)
     val category: Category,
@@ -41,5 +41,5 @@ class Product(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long = 0L,
 ) : AuditingTimeEntity()
