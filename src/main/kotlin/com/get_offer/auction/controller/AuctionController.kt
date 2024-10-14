@@ -2,6 +2,7 @@ package com.get_offer.auction.controller
 
 import ApiResponse
 import com.get_offer.auction.service.AuctionService
+import com.get_offer.auction.service.BuyAuctionDetailDto
 import com.get_offer.auction.service.BuyAuctionDto
 import com.get_offer.auction.service.SellAuctionDetailDto
 import com.get_offer.auction.service.SellAuctionDto
@@ -34,9 +35,15 @@ class AuctionController(
     }
 
     @GetMapping("{id}/sold")
-    fun getUserSellDetail(@RequestParam userId: String, @PathVariable id: Long): ApiResponse<SellAuctionDetailDto> {
-        return ApiResponse.success(auctionService.getSellDetail(userId.toLong(), id))
+    fun getSoldAuctionDetail(@RequestParam userId: String, @PathVariable id: Long): ApiResponse<SellAuctionDetailDto> {
+        return ApiResponse.success(auctionService.getSoldAuctionDetail(userId.toLong(), id))
     }
 
-
+    @GetMapping("{id}/bought")
+    fun getBoughtAuctionDetail(
+        @RequestParam userId: String,
+        @PathVariable id: Long
+    ): ApiResponse<BuyAuctionDetailDto> {
+        return ApiResponse.success(auctionService.getBoughtAuctionDetail(userId.toLong(), id))
+    }
 }

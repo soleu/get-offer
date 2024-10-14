@@ -2,9 +2,9 @@ package com.get_offer.auction.service
 
 import com.get_offer.auction.controller.repository.AuctionResultRepository
 import com.get_offer.common.exception.NotFoundException
+import com.get_offer.common.exception.UnAuthorizationException
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.repository.UserRepository
-import javax.sound.sampled.UnsupportedAudioFileException
 import org.springframework.stereotype.Service
 
 @Service
@@ -30,20 +30,32 @@ class AuctionService(
         }
     }
 
-    fun getSellDetail(userId: Long, auctionId: Long): SellAuctionDetailDto {
+    fun getSoldAuctionDetail(userId: Long, auctionId: Long): SellAuctionDetailDto {
         val auction = auctionRepository.findById(auctionId)
             .orElseThrow { NotFoundException("$auctionId 의 경매 내역은 존재하지 않습니다.") }
 
         val product = productRepository.findById(auction.productId)
             .orElseThrow { NotFoundException("${auction.productId} 의 상품은 존재하지 않습니다.") }
-
-        if (userId != product.writerId) {
-            throw UnsupportedAudioFileException() // 인가되지 않은 유저
-        }
+        if (userId != product.writerId) throw UnAuthorizationException()
 
         val buyer = userRepository.findById(auction.buyerId)
             .orElseThrow { NotFoundException("${auction.buyerId} 의 사용자는 존재하지 않습니다.") }
 
         return SellAuctionDetailDto.of(product, buyer, auction)
+    }
+
+
+    fun getBoughtAuctionDetail(userId: Long, auctionId: Long): BuyAuctionDetailDto {
+        val auction = auctionRepository.findById(auctionId)
+            .orElseThrow { NotFoundException("$auctionId 의 경매 내역은 존재하지 않습니다.") }
+        if (userId != auction.buyerId) throw UnAuthorizationException()
+
+        val product = productRepository.findById(auction.productId)
+            .orElseThrow { NotFoundException("${auction.productId} 의 상품은 존재하지 않습니다.") }
+
+        val seller = userRepository.findById(product.writerId)
+            .orElseThrow { NotFoundException("${product.writerId} 의 사용자는 존재하지 않습니다.") }
+
+        return BuyAuctionDetailDto.of(product, seller, auction)
     }
 }
