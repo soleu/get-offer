@@ -44,7 +44,6 @@ class AuctionService(
         return SellAuctionDetailDto.of(product, buyer, auction)
     }
 
-
     fun getBoughtAuctionDetail(userId: Long, auctionId: Long): BuyAuctionDetailDto {
         val auction = auctionRepository.findById(auctionId)
             .orElseThrow { NotFoundException("$auctionId 의 경매 내역은 존재하지 않습니다.") }
