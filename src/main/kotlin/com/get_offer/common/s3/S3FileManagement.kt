@@ -2,7 +2,6 @@ package com.get_offer.common.s3
 
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.ObjectMetadata
-import com.get_offer.common.exception.NotFoundException
 import com.get_offer.multipart.FileValidate
 import java.util.*
 import org.springframework.beans.factory.annotation.Value
@@ -25,7 +24,7 @@ class S3FileManagement(
 
     fun uploadImage(multipartFile: MultipartFile): String {
         val originalFilename = multipartFile.originalFilename
-            ?: throw NotFoundException("")
+            ?: throw IllegalStateException()
         FileValidate.checkImageFormat(originalFilename)
         val fileName = "${UUID.randomUUID()}-${originalFilename}"
         val objectMetadata = setFileDateOption(

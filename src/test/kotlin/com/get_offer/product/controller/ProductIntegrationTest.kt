@@ -64,4 +64,9 @@ class ProductIntegrationTest(
             .andExpect(jsonPath("$.data.endDate").value("2024-01-04T00:00:00"))
             .andExpect(jsonPath("$.data.isMine").value("true"))
     }
+
+    @Test
+    fun postProductIntegrationTest() {
+
+    }
 }

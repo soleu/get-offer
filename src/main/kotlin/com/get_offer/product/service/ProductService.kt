@@ -72,8 +72,8 @@ class ProductService(
     }
 
     private fun validateDateRange(startDate: LocalDateTime, endDate: LocalDateTime) {
-        if (startDate.isAfter(endDate)) throw BadRequestException()
-        if (ChronoUnit.DAYS.between(startDate, endDate) > 7) throw BadRequestException()
+        if (startDate.isAfter(endDate)) throw BadRequestException("시작 날짜가 유효하지 않습니다.")
+        if (ChronoUnit.DAYS.between(startDate, endDate) > 7) throw BadRequestException("경매 기간은 7일을 넘길 수 없습니다.")
     }
 
     private fun checkStatus(startDate: LocalDateTime): ProductStatus {

@@ -22,4 +22,9 @@ class ExceptionControllerAdvice {
     fun handleUnAuthorizationException(ex: UnAuthorizationException): ResponseEntity<ApiResponse<Any>> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("인가되지 않은 사용자입니다"))
     }
+
+    @ExceptionHandler
+    fun handleUnsupportedFileExtensionException(ex: UnsupportedFileExtensionException): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(ApiResponse.error("파일의 확장자가 유효하지 않습니다."))
+    }
 }
