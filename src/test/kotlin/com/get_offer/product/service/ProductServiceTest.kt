@@ -2,21 +2,29 @@ package com.get_offer.product.service
 
 import com.get_offer.TestFixtures
 import com.get_offer.multipart.ImageService
+import com.get_offer.product.controller.ProductPostReqDto
+import com.get_offer.product.domain.Category
+import com.get_offer.product.domain.Product
+import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.User
 import com.get_offer.user.repository.UserRepository
+import java.time.LocalDateTime
 import java.util.*
+import org.apache.coyote.BadRequestException
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyList
 import org.mockito.Mockito.any
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import org.springframework.mock.web.MockMultipartFile
 
 class ProductServiceTest {
     private lateinit var productService: ProductService
@@ -82,4 +90,92 @@ class ProductServiceTest {
         Assertions.assertThat(result.images[0]).isEqualTo("https://image1.png")
         Assertions.assertThat(result.images[1]).isEqualTo("https://image2.png")
     }
+
+    @Test
+    fun postProductWithValidData() {
+        // given
+        val userId = 1L
+        val productReqDto = ProductPostReqDto(
+            title = "Test Product",
+            description = "Test Description",
+            startPrice = 1000,
+            startDate = LocalDateTime.now().plusDays(1),
+            endDate = LocalDateTime.now().plusDays(3),
+            category = Category.BOOKS
+        )
+
+        val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
+
+        val imageUrls = listOf("http://image-url.com/test.jpg")
+        `when`(mockImageService.saveImages(anyList())).thenReturn(imageUrls)
+
+        val product = Product(
+            title = productReqDto.title,
+            category = productReqDto.category,
+            writerId = userId,
+            images = ProductImagesVo(imageUrls),
+            description = productReqDto.description,
+            startPrice = productReqDto.startPrice,
+            currentPrice = productReqDto.startPrice,
+            startDate = productReqDto.startDate,
+            endDate = productReqDto.endDate,
+            status = ProductStatus.IN_PROGRESS
+        )
+
+        `when`(mockProductRepository.save(any(Product::class.java))).thenReturn(product)
+
+        // when
+        val result = productService.postProduct(productReqDto, userId, listOf(mockImage))
+
+        // then
+        assertNotNull(result)
+        assertEquals(productReqDto.title, result.title)
+    }
+
+    @Test
+    fun postProductWithInvalidStartPrice() {
+        // given
+        val userId = 1L
+        val productReqDto = ProductPostReqDto(
+            title = "Test Product",
+            description = "Test Description",
+            startPrice = -1000,  // Invalid start price
+            startDate = LocalDateTime.now().plusDays(1),
+            endDate = LocalDateTime.now().plusDays(3),
+            category = Category.BOOKS
+        )
+
+        val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
+
+        // when & then
+        val exception = assertThrows(BadRequestException::class.java) {
+            productService.postProduct(productReqDto, userId, listOf(mockImage))
+        }
+
+        assertEquals("startPrice가 0보다 작을 수 없습니다.", exception.message)
+    }
+
+    @Test
+    fun `test postProduct with invalid date range`() {
+        // given
+        val userId = 1L
+        val productReqDto = ProductPostReqDto(
+            title = "Test Product",
+            description = "Test Description",
+            startPrice = 1000,
+            startDate = LocalDateTime.now().plusDays(10),  // Invalid start date (after end date)
+            endDate = LocalDateTime.now().plusDays(3),
+            category = Category.BOOKS
+        )
+
+        val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
+
+        // when & then
+        val exception = assertThrows(BadRequestException::class.java) {
+            productService.postProduct(productReqDto, userId, listOf(mockImage))
+        }
+
+        assertEquals("시작 날짜가 유효하지 않습니다.", exception.message)
+    }
+
 }
