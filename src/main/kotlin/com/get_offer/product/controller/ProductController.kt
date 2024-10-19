@@ -1,9 +1,9 @@
 package com.get_offer.product.controller
 
 import ApiResponse
-import com.get_offer.multipart.ImageService
 import com.get_offer.product.service.ProductDetailDto
 import com.get_offer.product.service.ProductListDto
+import com.get_offer.product.service.ProductSaveDto
 import com.get_offer.product.service.ProductService
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/products")
 class ProductController(
     private val productService: ProductService,
-    private val imageService: ImageService,
 ) {
     @GetMapping
     fun getProductList(
@@ -41,12 +40,10 @@ class ProductController(
 
     @PostMapping
     fun postProduct(
-        @RequestParam userId: String, @RequestPart images: List<MultipartFile>
-    ) {
-        try {
-            imageService.saveImages(images)
-        } catch (e: Exception) {
-            throw e
-        }
+        @RequestParam userId: String,
+        @RequestPart("images") images: List<MultipartFile>,
+        @RequestPart productReqDto: ProductPostReqDto
+    ): ProductSaveDto {
+        return productService.postProduct(productReqDto, userId.toLong(), images)
     }
 }
