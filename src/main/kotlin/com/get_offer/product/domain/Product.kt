@@ -21,10 +21,10 @@ class Product(
 
     val title: String,
 
-    @Enumerated(EnumType.STRING) val category: Category,
+    @Enumerated(EnumType.STRING)
+    val category: Category,
 
-    @Convert(converter = ProductImagesConverter::class) @Column(name = "IMAGES")
-    val images: ProductImagesVo,
+    @Convert(converter = ProductImagesConverter::class) @Column(name = "IMAGES") val images: ProductImagesVo,
 
     val description: String,
 
@@ -32,15 +32,13 @@ class Product(
 
     var currentPrice: Int,
 
-    @Enumerated(EnumType.STRING)
-    var status: ProductStatus,
+    @Enumerated(EnumType.STRING) var status: ProductStatus,
 
     var startDate: LocalDateTime,
 
     var endDate: LocalDateTime,
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long = 0L,
 ) : AuditingTimeEntity() {
     fun updateProduct(dto: ProductEditReq): Product {
         if (dto.startPrice != null) {
@@ -72,10 +70,10 @@ class Product(
         }
 
         fun checkStatus(startDate: LocalDateTime): ProductStatus {
-            if (startDate.isAfter(LocalDateTime.now())) {
-                return ProductStatus.IN_PROGRESS
+            if (LocalDateTime.now().isBefore(startDate)) {
+                return ProductStatus.WAIT
             }
-            return ProductStatus.WAIT
+            return ProductStatus.IN_PROGRESS
         }
 
         private fun validateStartPrice(startPrice: Int) {

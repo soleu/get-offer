@@ -4,7 +4,7 @@ import com.get_offer.common.exception.UnsupportedFileExtensionException
 
 class FileValidate {
     companion object {
-        private val IMAGE_EXTENSIONS: List<String> = listOf("jpg", "png")
+        private val IMAGE_EXTENSIONS: List<String> = listOf("jpg", "png", "jpeg")
 
         fun checkImageFormat(fileName: String) {
             val extensionIndex = fileName.lastIndexOf('.')
