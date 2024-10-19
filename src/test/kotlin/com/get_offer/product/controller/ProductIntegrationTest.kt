@@ -61,7 +61,7 @@ class ProductIntegrationTest(
             .andExpect(jsonPath("$.data.endDate").value("2024-01-04T00:00:00"))
             .andExpect(jsonPath("$.data.isMine").value("true"))
     }
-    
+
     @Test
     fun postProductIntegrationTest() {
         // 이미지 파일 로드
@@ -76,8 +76,8 @@ class ProductIntegrationTest(
             "title": "솔 타이틀",
             "description": "설명",
             "startPrice": 1000,
-            "startDate": "2024-10-19T15:00:00",
-            "endDate": "2024-10-23T15:00:00",
+            "startDate": "2099-10-19T15:00:00",
+            "endDate": "2099-10-23T15:00:00",
             "category": "BOOKS"
         }
     """.trimIndent()
@@ -94,6 +94,39 @@ class ProductIntegrationTest(
                 .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andExpect(status().isOk)
             .andExpect(jsonPath("$.data.title").value("솔 타이틀"))
+            .andExpect(jsonPath("$.data.writerId").value(1))
+    }
+
+    @Test
+    fun updateProductIntegrationTest() {
+        // 이미지 파일 로드
+        val imagePath = Paths.get("src/test/resources/img_1.png")
+        val imageFile = MockMultipartFile(
+            "images", "img_1.png", MediaType.IMAGE_PNG_VALUE, Files.readAllBytes(imagePath)
+        )
+
+        // JSON 데이터 생성
+        val productReqDto = """
+        {
+            "title": "수정된 제목",
+            "description": "수정된 설명",
+            "startPrice": 1500,
+            "category": "GAMES"
+        }
+    """.trimIndent()
+        val productReqDtoFile = MockMultipartFile(
+            "productReqDto", "productReqDto", MediaType.APPLICATION_JSON_VALUE, productReqDto.toByteArray()
+        )
+
+        // MockMvc 요청 작성 및 실행
+        mockMvc.perform(
+            MockMvcRequestBuilders.multipart("/products/1")
+                .file(imageFile)
+                .file(productReqDtoFile)
+                .param("userId", "1")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$.data.title").value("수정된 제목"))
             .andExpect(jsonPath("$.data.writerId").value(1))
     }
 }

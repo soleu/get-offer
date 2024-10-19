@@ -178,4 +178,33 @@ class ProductServiceTest {
         assertEquals("시작 날짜가 유효하지 않습니다.", exception.message)
     }
 
+    @Test
+    fun editProductReturnsDto() {
+        // Given
+        val productId = 1L
+        val writerId = 1L
+        val req = ProductEditDto(
+            productId = productId,
+            writerId = writerId,
+            title = "new title",
+            description = "new description"
+        )
+        val existingProduct = Product(
+            writerId, "old Title", Category.BOOKS, images = ProductImagesVo(listOf("images.png")),
+            "old description", 1000, 1000, ProductStatus.WAIT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            productId,
+        )
+
+        `when`(mockProductRepository.findById(productId)).thenReturn(Optional.of(existingProduct))
+        `when`(mockProductRepository.save(any(Product::class.java))).thenReturn(existingProduct)
+
+        // When
+        val result = productService.editProduct(req)
+
+        // Then
+        assertEquals(req.title, result.title)
+        assertEquals(req.writerId, result.writerId)
+    }
 }

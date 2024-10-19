@@ -7,14 +7,14 @@ import org.springframework.web.multipart.MultipartFile
 
 data class ProductEditDto(
     val productId: Long,
-    val title: String?,
-    val category: Category?,
-    val description: String?,
-    val startPrice: Int?,
-    val startDate: LocalDateTime?,
-    val endDate: LocalDateTime?,
     val writerId: Long,
-    val images: List<MultipartFile>?
+    val title: String? = null,
+    val category: Category? = null,
+    val description: String? = null,
+    val startPrice: Int? = null,
+    val startDate: LocalDateTime? = null,
+    val endDate: LocalDateTime? = null,
+    val images: List<MultipartFile>? = null
 ) {
     companion object {
         fun of(productId: Long, req: ProductEditReqDto, userId: Long, images: List<MultipartFile>?): ProductEditDto {
