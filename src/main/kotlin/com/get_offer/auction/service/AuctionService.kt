@@ -1,9 +1,12 @@
 package com.get_offer.auction.service
 
 import com.get_offer.auction.controller.repository.AuctionResultRepository
+import com.get_offer.auction.domain.AuctionResult
 import com.get_offer.common.exception.NotFoundException
 import com.get_offer.common.exception.UnAuthorizationException
+import com.get_offer.product.domain.Product
 import com.get_offer.product.repository.ProductRepository
+import com.get_offer.user.domain.User
 import com.get_offer.user.repository.UserRepository
 import org.springframework.stereotype.Service
 
@@ -31,30 +34,35 @@ class AuctionService(
     }
 
     fun getSoldAuctionDetail(userId: Long, auctionId: Long): SellAuctionDetailDto {
-        val auction = auctionRepository.findById(auctionId)
-            .orElseThrow { NotFoundException("$auctionId 의 경매 내역은 존재하지 않습니다.") }
-
-        val product = productRepository.findById(auction.productId)
-            .orElseThrow { NotFoundException("${auction.productId} 의 상품은 존재하지 않습니다.") }
+        val (auction, product) = getAuctionAndProduct(auctionId)
         if (userId != product.writerId) throw UnAuthorizationException()
 
-        val buyer = userRepository.findById(auction.buyerId)
-            .orElseThrow { NotFoundException("${auction.buyerId} 의 사용자는 존재하지 않습니다.") }
+        val buyer = getUser(auction.buyerId)
 
         return SellAuctionDetailDto.of(product, buyer, auction)
     }
 
     fun getBoughtAuctionDetail(userId: Long, auctionId: Long): BuyAuctionDetailDto {
+        val (auction, product) = getAuctionAndProduct(auctionId)
+        if (userId != auction.buyerId) throw UnAuthorizationException()
+
+        val seller = getUser(product.writerId)
+
+        return BuyAuctionDetailDto.of(product, seller, auction)
+    }
+
+    private fun getAuctionAndProduct(auctionId: Long): Pair<AuctionResult, Product> {
         val auction = auctionRepository.findById(auctionId)
             .orElseThrow { NotFoundException("$auctionId 의 경매 내역은 존재하지 않습니다.") }
-        if (userId != auction.buyerId) throw UnAuthorizationException()
 
         val product = productRepository.findById(auction.productId)
             .orElseThrow { NotFoundException("${auction.productId} 의 상품은 존재하지 않습니다.") }
 
-        val seller = userRepository.findById(product.writerId)
-            .orElseThrow { NotFoundException("${product.writerId} 의 사용자는 존재하지 않습니다.") }
+        return Pair(auction, product)
+    }
 
-        return BuyAuctionDetailDto.of(product, seller, auction)
+    private fun getUser(userId: Long): User {
+        return userRepository.findById(userId)
+            .orElseThrow { NotFoundException("$userId 의 사용자는 존재하지 않습니다.") }
     }
 }
