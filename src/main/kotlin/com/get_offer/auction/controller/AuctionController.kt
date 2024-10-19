@@ -34,9 +34,12 @@ class AuctionController(
         return ApiResponse.success(auctionService.getBuyHistory(userId.toLong()))
     }
 
-    @GetMapping("{id}/sold")
-    fun getSoldAuctionDetail(@RequestParam userId: String, @PathVariable id: Long): ApiResponse<SellAuctionDetailDto> {
-        return ApiResponse.success(auctionService.getSoldAuctionDetail(userId.toLong(), id))
+    @GetMapping("{auctionId}/sold")
+    fun getSoldAuctionDetail(
+        @RequestParam userId: String,
+        @PathVariable auctionId: Long
+    ): ApiResponse<SellAuctionDetailDto> {
+        return ApiResponse.success(auctionService.getSoldAuctionDetail(userId.toLong(), auctionId))
     }
 
     @GetMapping("{id}/bought")
