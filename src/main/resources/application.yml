@@ -29,5 +29,3 @@ aws:
   stack:
     auto: false
   credentials:
-    accessKey:
-    secretKey:
