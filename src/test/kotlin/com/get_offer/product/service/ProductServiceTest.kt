@@ -1,6 +1,7 @@
 package com.get_offer.product.service
 
 import com.get_offer.TestFixtures
+import com.get_offer.multipart.ImageService
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.User
@@ -21,12 +22,14 @@ class ProductServiceTest {
     private lateinit var productService: ProductService
     private lateinit var mockProductRepository: ProductRepository
     private lateinit var mockUserRepository: UserRepository
+    private lateinit var mockImageService: ImageService
 
     @BeforeEach
     fun setUp() {
         mockProductRepository = mock(ProductRepository::class.java)
         mockUserRepository = mock(UserRepository::class.java)
-        productService = ProductService(mockProductRepository, mockUserRepository)
+        mockImageService = mock(ImageService::class.java)
+        productService = ProductService(mockImageService, mockProductRepository, mockUserRepository)
     }
 
     @Test
@@ -41,8 +44,7 @@ class ProductServiceTest {
 
         `when`(
             mockProductRepository.findAllByStatusInOrderByEndDateDesc(
-                listOf(ProductStatus.IN_PROGRESS, ProductStatus.WAIT),
-                pageable
+                listOf(ProductStatus.IN_PROGRESS, ProductStatus.WAIT), pageable
             )
         ).thenReturn(
             PageImpl(items, pageable, items.size.toLong())

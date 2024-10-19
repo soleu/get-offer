@@ -43,7 +43,7 @@ class ProductController(
         @RequestParam userId: String,
         @RequestPart("images") images: List<MultipartFile>,
         @RequestPart productReqDto: ProductPostReqDto
-    ): ProductSaveDto {
-        return productService.postProduct(productReqDto, userId.toLong(), images)
+    ): ApiResponse<ProductSaveDto> {
+        return ApiResponse.success(productService.postProduct(productReqDto, userId.toLong(), images))
     }
 }

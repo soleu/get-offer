@@ -19,11 +19,9 @@ class Product(
 
     val title: String,
 
-    @Enumerated(EnumType.STRING)
-    val category: Category,
+    @Enumerated(EnumType.STRING) val category: Category,
 
-    @Convert(converter = ProductImagesConverter::class)
-    @Column(name = "IMAGES")
+    @Convert(converter = ProductImagesConverter::class) @Column(name = "IMAGES")
     val images: ProductImagesVo,
 
     val description: String,
@@ -39,7 +37,6 @@ class Product(
 
     var endDate: LocalDateTime,
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0L,
 ) : AuditingTimeEntity()
