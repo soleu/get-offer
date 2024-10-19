@@ -40,6 +40,10 @@ class S3FileManagement(
         return amazonS3.getUrl(bucket, fileName).toString()
     }
 
+    fun delete(fileNames: List<String>) {
+        fileNames.forEach { delete(it) }
+    }
+
     fun delete(fileName: String) {
         amazonS3.deleteObject(bucket, fileName)
     }

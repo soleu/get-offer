@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import org.apache.coyote.BadRequestException
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -39,4 +41,52 @@ class Product(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L,
-) : AuditingTimeEntity()
+) : AuditingTimeEntity() {
+    fun updateProduct(dto: ProductEditReq): Product {
+        if (dto.startPrice != null) {
+            validateStartPrice(dto.startPrice)
+        }
+
+        val startDate = dto.startDate ?: this.startDate
+        val endDate = dto.endDate ?: this.endDate
+        validateDateRange(startDate, endDate)
+
+        return Product(
+            title = dto.title ?: this.title,
+            description = dto.description ?: this.description,
+            startPrice = dto.startPrice ?: this.startPrice,
+            currentPrice = dto.startPrice ?: this.startPrice,
+            category = dto.category ?: this.category,
+            status = ProductStatus.WAIT,
+            startDate = startDate,
+            endDate = endDate,
+            images = dto.images?.let { ProductImagesVo(it) } ?: this.images,
+            writerId = this.writerId
+        )
+    }
+
+    companion object {
+        fun validateProduct(startPrice: Int, startDate: LocalDateTime, endDate: LocalDateTime) {
+            validateStartPrice(startPrice)
+            validateDateRange(startDate, endDate)
+        }
+
+        fun checkStatus(startDate: LocalDateTime): ProductStatus {
+            if (startDate.isAfter(LocalDateTime.now())) {
+                return ProductStatus.IN_PROGRESS
+            }
+            return ProductStatus.WAIT
+        }
+
+        private fun validateStartPrice(startPrice: Int) {
+            if (startPrice < 0) {
+                throw BadRequestException("startPrice가 0보다 작을 수 없습니다.")
+            }
+        }
+
+        private fun validateDateRange(startDate: LocalDateTime, endDate: LocalDateTime) {
+            if (startDate.isAfter(endDate)) throw BadRequestException("시작 날짜가 유효하지 않습니다.")
+            if (ChronoUnit.DAYS.between(startDate, endDate) > 7) throw BadRequestException("경매 기간은 7일을 넘길 수 없습니다.")
+        }
+    }
+}

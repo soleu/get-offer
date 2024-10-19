@@ -12,7 +12,7 @@ class ImageService(
         return s3FileManagement.uploadImages(images)
     }
 
-    fun deleteImage(imageUrl: String) {
-        val file = s3FileManagement.delete(imageUrl)
+    fun deleteImages(imageUrls: List<String>) {
+        val file = s3FileManagement.delete(imageUrls)
     }
 }

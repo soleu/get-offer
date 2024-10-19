@@ -1,15 +1,15 @@
 package com.get_offer.product.service
 
 import com.get_offer.common.exception.NotFoundException
+import com.get_offer.common.exception.UnAuthorizationException
 import com.get_offer.multipart.ImageService
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Product
+import com.get_offer.product.domain.ProductEditReq
 import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.repository.UserRepository
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 import org.apache.coyote.BadRequestException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -42,11 +42,9 @@ class ProductService(
 
     @Transactional
     fun postProduct(req: ProductPostReqDto, userId: Long, images: List<MultipartFile>): ProductSaveDto {
-
-        validateStartPrice(req.startPrice)
-        validateDateRange(req.startDate, req.endDate)
-
         val imageUrls = imageService.saveImages(images)
+
+        Product.validateProduct(req.startPrice, req.startDate, req.endDate)
 
         val product = productRepository.save(
             Product(
@@ -59,27 +57,32 @@ class ProductService(
                 currentPrice = req.startPrice,
                 startDate = req.startDate,
                 endDate = req.endDate,
-                status = checkStatus(req.startDate)
+                status = Product.checkStatus(req.startDate)
             )
         )
         return ProductSaveDto.of(product)
     }
 
-    private fun validateStartPrice(startPrice: Int) {
-        if (startPrice < 0) {
-            throw BadRequestException("startPrice가 0보다 작을 수 없습니다.")
+    @Transactional
+    fun editProduct(req: ProductEditDto): ProductSaveDto {
+        val product = productRepository.findById(req.productId)
+            .orElseThrow { NotFoundException("${req.productId} 의 상품은 존재하지 않습니다.") }
+        // access
+        if (product.writerId != req.writerId) {
+            throw UnAuthorizationException()
         }
-    }
 
-    private fun validateDateRange(startDate: LocalDateTime, endDate: LocalDateTime) {
-        if (startDate.isAfter(endDate)) throw BadRequestException("시작 날짜가 유효하지 않습니다.")
-        if (ChronoUnit.DAYS.between(startDate, endDate) > 7) throw BadRequestException("경매 기간은 7일을 넘길 수 없습니다.")
-    }
-
-    private fun checkStatus(startDate: LocalDateTime): ProductStatus {
-        if (startDate.isAfter(LocalDateTime.now())) {
-            return ProductStatus.IN_PROGRESS
+        if (product.status != ProductStatus.WAIT) {
+            throw BadRequestException("진행 전 대기 상태에서만 수정 할 수 있습니다.")
         }
-        return ProductStatus.WAIT
+
+        val imageUrls = if (req.images != null) {
+            imageService.deleteImages(product.images.images) // 기존 사진 삭제
+            imageService.saveImages(req.images)
+        } else null
+
+        product.updateProduct(ProductEditReq.of(req, imageUrls))
+
+        return ProductSaveDto.of(product)
     }
 }
