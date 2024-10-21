@@ -95,14 +95,7 @@ class ProductServiceTest {
     fun postProductWithValidData() {
         // given
         val userId = 1L
-        val productReqDto = ProductPostReqDto(
-            title = "Test Product",
-            description = "Test Description",
-            startPrice = 1000,
-            startDate = LocalDateTime.now().plusDays(1),
-            endDate = LocalDateTime.now().plusDays(3),
-            category = Category.BOOKS
-        )
+        val productReqDto = makeProductPostDto()
 
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
 
@@ -136,13 +129,8 @@ class ProductServiceTest {
     fun postProductWithInvalidStartPrice() {
         // given
         val userId = 1L
-        val productReqDto = ProductPostReqDto(
-            title = "Test Product",
-            description = "Test Description",
+        val productReqDto = makeProductPostDto().copy(
             startPrice = -1000,  // Invalid start price
-            startDate = LocalDateTime.now().plusDays(1),
-            endDate = LocalDateTime.now().plusDays(3),
-            category = Category.BOOKS
         )
 
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
@@ -159,13 +147,9 @@ class ProductServiceTest {
     fun `test postProduct with invalid date range`() {
         // given
         val userId = 1L
-        val productReqDto = ProductPostReqDto(
-            title = "Test Product",
-            description = "Test Description",
-            startPrice = 1000,
-            startDate = LocalDateTime.now().plusDays(10),  // Invalid start date (after end date)
-            endDate = LocalDateTime.now().plusDays(3),
-            category = Category.BOOKS
+        val productReqDto = makeProductPostDto().copy(
+            // Invalid start date (after end date))
+            startDate = LocalDateTime.now().plusDays(10)
         )
 
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
@@ -206,5 +190,16 @@ class ProductServiceTest {
         // Then
         assertEquals(req.title, result.title)
         assertEquals(req.writerId, result.writerId)
+    }
+
+    private fun makeProductPostDto(): ProductPostReqDto {
+        return ProductPostReqDto(
+            title = "Test Product",
+            description = "Test Description",
+            startPrice = 1000,
+            startDate = LocalDateTime.now().plusDays(10),  // Invalid start date (after end date)
+            endDate = LocalDateTime.now().plusDays(3),
+            category = Category.BOOKS
+        )
     }
 }

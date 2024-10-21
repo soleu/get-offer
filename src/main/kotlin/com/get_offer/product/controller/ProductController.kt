@@ -8,9 +8,9 @@ import com.get_offer.product.service.ProductSaveDto
 import com.get_offer.product.service.ProductService
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
@@ -49,7 +49,7 @@ class ProductController(
         return ApiResponse.success(productService.postProduct(productReqDto, userId.toLong(), images))
     }
 
-    @PatchMapping("{productId}")
+    @PutMapping("{productId}")
     fun editProduct(
         @PathVariable productId: Long,
         @RequestParam userId: String,

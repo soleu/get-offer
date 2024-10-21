@@ -50,6 +50,7 @@ class Product(
         validateDateRange(startDate, endDate)
 
         return Product(
+            id = this.id,
             title = dto.title ?: this.title,
             description = dto.description ?: this.description,
             startPrice = dto.startPrice ?: this.startPrice,
@@ -59,7 +60,7 @@ class Product(
             startDate = startDate,
             endDate = endDate,
             images = dto.images?.let { ProductImagesVo(it) } ?: this.images,
-            writerId = this.writerId
+            writerId = this.writerId,
         )
     }
 

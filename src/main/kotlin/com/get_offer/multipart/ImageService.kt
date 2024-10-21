@@ -13,6 +13,6 @@ class ImageService(
     }
 
     fun deleteImages(imageUrls: List<String>) {
-        val file = s3FileManagement.delete(imageUrls)
+        s3FileManagement.delete(imageUrls)
     }
 }

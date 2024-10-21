@@ -65,10 +65,7 @@ class ProductIntegrationTest(
     @Test
     fun postProductIntegrationTest() {
         // 이미지 파일 로드
-        val imagePath = Paths.get("src/test/resources/img.png")
-        val imageFile = MockMultipartFile(
-            "images", "img.png", MediaType.IMAGE_PNG_VALUE, Files.readAllBytes(imagePath)
-        )
+        val imageFile = loadImageFile("img.png")
 
         // JSON 데이터 생성
         val productReqDto = """
@@ -87,23 +84,16 @@ class ProductIntegrationTest(
 
         // MockMvc 요청 작성 및 실행
         mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/products")
-                .file(imageFile)
-                .file(productReqDtoFile)
-                .param("userId", "1")
+            MockMvcRequestBuilders.multipart("/products").file(imageFile).file(productReqDtoFile).param("userId", "1")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-        ).andExpect(status().isOk)
-            .andExpect(jsonPath("$.data.title").value("솔 타이틀"))
+        ).andExpect(status().isOk).andExpect(jsonPath("$.data.title").value("솔 타이틀"))
             .andExpect(jsonPath("$.data.writerId").value(1))
     }
 
     @Test
     fun updateProductIntegrationTest() {
         // 이미지 파일 로드
-        val imagePath = Paths.get("src/test/resources/img_1.png")
-        val imageFile = MockMultipartFile(
-            "images", "img_1.png", MediaType.IMAGE_PNG_VALUE, Files.readAllBytes(imagePath)
-        )
+        val imageFile = loadImageFile("img_1.png")
 
         // JSON 데이터 생성
         val productReqDto = """
@@ -113,20 +103,28 @@ class ProductIntegrationTest(
             "startPrice": 1500,
             "category": "GAMES"
         }
-    """.trimIndent()
+        """.trimIndent()
         val productReqDtoFile = MockMultipartFile(
             "productReqDto", "productReqDto", MediaType.APPLICATION_JSON_VALUE, productReqDto.toByteArray()
         )
+        val builder = MockMvcRequestBuilders.multipart("/products/2")
+        builder.with { request ->
+            request.method = "PUT"
+            request
+        }
 
         // MockMvc 요청 작성 및 실행
         mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/products/1")
-                .file(imageFile)
-                .file(productReqDtoFile)
-                .param("userId", "1")
+            builder.file(imageFile).file(productReqDtoFile).param("userId", "1")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-        ).andExpect(status().isOk)
-            .andExpect(jsonPath("$.data.title").value("수정된 제목"))
+        ).andExpect(status().isOk).andExpect(jsonPath("$.data.title").value("수정된 제목"))
             .andExpect(jsonPath("$.data.writerId").value(1))
+    }
+
+    private fun loadImageFile(name: String): MockMultipartFile {
+        val imagePath = Paths.get("src/test/resources/${name}")
+        return MockMultipartFile(
+            "images", name, MediaType.IMAGE_PNG_VALUE, Files.readAllBytes(imagePath)
+        )
     }
 }

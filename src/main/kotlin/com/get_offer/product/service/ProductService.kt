@@ -65,7 +65,7 @@ class ProductService(
 
     @Transactional
     fun editProduct(req: ProductEditDto): ProductSaveDto {
-        val product = productRepository.findById(req.productId)
+        var product = productRepository.findById(req.productId)
             .orElseThrow { NotFoundException("${req.productId} 의 상품은 존재하지 않습니다.") }
         // access
         if (product.writerId != req.writerId) {
@@ -81,7 +81,8 @@ class ProductService(
             imageService.saveImages(req.images)
         } else null
 
-        product.updateProduct(ProductEditReq.of(req, imageUrls))
+
+        product = product.updateProduct(ProductEditReq.of(req, imageUrls))
         productRepository.save(product)
 
         return ProductSaveDto.of(product)
