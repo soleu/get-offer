@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository
@@ -42,8 +45,21 @@ class OAuth2LoginConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests { authorizeHttpRequests ->
-            authorizeHttpRequests.requestMatchers("/**").hasRole("USER")
-        }.oauth2Login { }
+            authorizeHttpRequests.requestMatchers("/oauth_login", "/loginSuccess").permitAll()
+                .anyRequest()
+                .authenticated()
+        }.oauth2Login { it ->
+            it.loginPage("/oauth_login")
+            it.defaultSuccessUrl("/loginSuccess", true)
+            it.tokenEndpoint {
+                it.accessTokenResponseClient(accessTokenResponseClient())
+            }
+        }
         return http.build()
+    }
+
+    @Bean
+    fun accessTokenResponseClient(): OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> {
+        return DefaultAuthorizationCodeTokenResponseClient()
     }
 }
