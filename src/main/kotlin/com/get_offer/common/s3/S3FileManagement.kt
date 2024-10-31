@@ -45,7 +45,7 @@ class S3FileManagement(
         fileNames.forEach { delete(it) }
     }
 
-    fun delete(fileName: String) {
+    private fun delete(fileName: String) {
         val deleteObjectRequest = DeleteObjectRequest.builder()
             .bucket(bucket)
             .key(fileName)

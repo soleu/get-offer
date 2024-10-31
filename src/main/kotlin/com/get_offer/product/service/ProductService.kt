@@ -82,7 +82,7 @@ class ProductService(
         } else null
 
 
-        product = product.updateProduct(ProductEditReq.of(req, imageUrls))
+        product.updateProduct(ProductEditReq.of(req, imageUrls))
         productRepository.save(product)
 
         return ProductSaveDto.of(product)
