@@ -25,7 +25,7 @@ class AuctionJobConfiguration(
     private val jobRepository: JobRepository,
 ) {
     @Bean
-    fun startAuction(): Job {
+    fun startAuctionJob(): Job {
         return JobBuilder("a", jobRepository)
             .start(updateProductWaitStatus())
             .build()
@@ -50,12 +50,7 @@ class AuctionJobConfiguration(
             .name("productItemReader")
             .entityManagerFactory(entityManagerFactory)
             .queryString(
-                "UPDATE products" +
-                        "SET status = 'IN_PROGRESS'" +
-                        "WHERE id IN (" +
-                        "    SELECT id FROM products" +
-                        "    WHERE status = 'WAIT' AND start_date <= :currentDate" +
-                        ");"
+                "SELECT p FROM Product p WHERE status = 'WAIT' AND startDate <= :currentDate"
             )
             .parameterValues(mapOf("currentDate" to LocalDateTime.now()))
             .pageSize(10)
@@ -70,7 +65,6 @@ class AuctionJobConfiguration(
             product
         }
     }
-
 
     @Bean
     @JobScope
