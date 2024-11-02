@@ -12,9 +12,18 @@ import jakarta.persistence.Table
 class User(
     val nickname: String,
 
-    val image: String = "https://drive.google.com/file/d/1g5yH7rq4_6bMrahRUD3fMoFHIcVLY18y/view?usp=sharing",
+    val image: String = DEFAULT_IMG,
+
+    val email: String = "",
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) : AuditingTimeEntity()
+) : AuditingTimeEntity() {
+    companion object {
+        const val DEFAULT_IMG = "https://drive.google.com/file/d/1g5yH7rq4_6bMrahRUD3fMoFHIcVLY18y/view?usp=sharing"
+        fun of(nickname: String, image: String?, email: String): User {
+            return User(nickname = nickname, image = image ?: DEFAULT_IMG, email = email)
+        }
+    }
+}
