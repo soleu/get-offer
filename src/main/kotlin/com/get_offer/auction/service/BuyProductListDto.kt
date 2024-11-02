@@ -20,7 +20,7 @@ data class BuyProductListDto(
     val endDate: LocalDateTime,
 ) {
     companion object {
-        fun of(auctionResult: AuctionResult, product: Product, userId: Long?): BuyProductListDto {
+        fun of(auctionResult: AuctionResult, product: Product): BuyProductListDto {
             return BuyProductListDto(
                 productId = product.id,
                 writerId = product.writerId,

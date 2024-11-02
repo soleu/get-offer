@@ -59,7 +59,7 @@ class EndAuctionJobConfiguration(
                         // 낙찰가가 존재하지 않을 때
                         AuctionResult(
                             productId = product.id,
-                            buyerId = null,
+                            buyerId = 0L,
                             finalPrice = 0,
                             auctionStatus = AuctionStatus.FAILED,
                         )

@@ -23,7 +23,7 @@ class AuctionService(
         return auctionResults.map {
             val product = productRepository.findById(it.productId)
                 .orElseThrow { NotFoundException("${it.productId} 의 상품은 존재하지 않습니다.") }
-            BuyProductListDto.of(it, product, userId)
+            BuyProductListDto.of(it, product)
         }
     }
 }
