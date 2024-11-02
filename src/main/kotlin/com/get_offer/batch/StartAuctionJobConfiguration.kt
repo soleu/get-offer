@@ -20,13 +20,13 @@ import org.springframework.transaction.PlatformTransactionManager
 
 
 @Configuration
-class AuctionJobConfiguration(
+class StartAuctionJobConfiguration(
     private val entityManagerFactory: EntityManagerFactory,
     private val jobRepository: JobRepository,
 ) {
     @Bean
     fun startAuctionJob(): Job {
-        return JobBuilder("a", jobRepository)
+        return JobBuilder("startAuctionJob", jobRepository)
             .start(updateProductWaitStatus())
             .build()
     }

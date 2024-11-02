@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 class BatchController(
     private val jobLauncher: JobLauncher,
     private val startAuctionJob: Job,
+    private val endAuctionJob: Job,
 ) {
     @PostMapping("/start")
     fun startBatch(): String {
@@ -21,5 +22,15 @@ class BatchController(
 
         jobLauncher.run(startAuctionJob, jobParameters)
         return "Start Auction Batch Job started"
+    }
+
+    @PostMapping("/end")
+    fun endBatch(): String {
+        val jobParameters = JobParametersBuilder()
+            .addLong("time", System.currentTimeMillis())
+            .toJobParameters()
+
+        jobLauncher.run(endAuctionJob, jobParameters)
+        return "End Auction Batch Job started"
     }
 }
