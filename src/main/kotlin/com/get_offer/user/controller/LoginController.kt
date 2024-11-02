@@ -1,6 +1,5 @@
-package com.get_offer.user
+package com.get_offer.user.controller
 
-import com.get_offer.user.controller.TokenRequest
 import org.springframework.core.ResolvableType
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -12,14 +11,9 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResp
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationExchange
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponse
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.client.RestTemplate
 
 
@@ -41,7 +35,7 @@ class LoginController(
         if (type != ResolvableType.NONE &&
             ClientRegistration::class.java.isAssignableFrom(type.resolveGenerics()[0])
         ) {
-            clientRegistrations = clientRegistrationRepository as Iterable<ClientRegistration>
+            clientRegistrations = clientRegistrationRepository as (Iterable<ClientRegistration>)
         }
 
         clientRegistrations?.forEach { registration ->
@@ -68,7 +62,7 @@ class LoginController(
             val headers = HttpHeaders().apply {
                 add(HttpHeaders.AUTHORIZATION, "Bearer ${client.accessToken.tokenValue}")
             }
-            println(client.accessToken.tokenValue) // 후에 수정 필요
+
             val entity = HttpEntity("", headers)
             val response = restTemplate.exchange(
                 userInfoEndpointUri,
@@ -78,31 +72,12 @@ class LoginController(
             )
             val userAttributes = response.body ?: emptyMap<String, Any>()
             model.addAttribute("name", userAttributes["name"])
+            model.addAttribute("Token", "123")
+            // userId -> accessToken
+            // jwt
+
+
         }
         return "loginSuccess"
-    }
-
-    @PostMapping("/token")
-    fun getAccessToken(@RequestBody req: TokenRequest): String? {
-        val clientRegistration = clientRegistrationRepository.findByRegistrationId("google")
-
-        val authorizationRequest = OAuth2AuthorizationRequest.authorizationCode()
-            .clientId(clientRegistration.clientId)
-            .redirectUri(req.redirectUri)
-            .authorizationUri(clientRegistration.providerDetails.authorizationUri)
-            .build()
-
-        val authorizationResponse = OAuth2AuthorizationResponse.success(req.authorizationCode)
-            .redirectUri(req.redirectUri)
-            .build()
-
-        val authorizationExchange = OAuth2AuthorizationExchange(authorizationRequest, authorizationResponse)
-
-        // Access Token 발급 요청
-        val tokenRequest = OAuth2AuthorizationCodeGrantRequest(clientRegistration, authorizationExchange)
-        val tokenResponse = accessTokenResponseClient.getTokenResponse(tokenRequest)
-
-        // Access Token 반환
-        return tokenResponse.accessToken.tokenValue
     }
 }

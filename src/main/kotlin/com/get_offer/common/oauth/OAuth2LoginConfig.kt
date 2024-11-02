@@ -48,12 +48,9 @@ class OAuth2LoginConfig(
             authorizeHttpRequests.requestMatchers("/oauth_login", "/loginSuccess").permitAll()
                 .anyRequest()
                 .authenticated()
-        }.oauth2Login { it ->
+        }.oauth2Login {
             it.loginPage("/oauth_login")
             it.defaultSuccessUrl("/loginSuccess", true)
-            it.tokenEndpoint {
-                it.accessTokenResponseClient(accessTokenResponseClient())
-            }
         }
         return http.build()
     }
