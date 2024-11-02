@@ -51,21 +51,26 @@ class EndAuctionJobConfiguration(
                     .orElseThrow()
                 // 최고가가 상품의 현재가와 다를 때
                 if (highestBid.bidPrice != product.currentPrice) {
+                    product.currentPrice = highestBid.bidPrice
                 }
-                // 낙찰가가 존재하지 않을 때
-                if (highestBid == null) {
-
-                }
-                // auction results - 동일 상품에 대해 유니크값 걸기
-
-
                 // AuctionResult 생성 및 저장
-                val auctionResult = AuctionResult(
-                    productId = product.id,
-                    buyerId = highestBid.bidderId,
-                    finalPrice = highestBid.bidPrice,
-                    auctionStatus = AuctionStatus.WAIT,
-                )
+                val auctionResult =
+                    if (highestBid == null) {
+                        // 낙찰가가 존재하지 않을 때
+                        AuctionResult(
+                            productId = product.id,
+                            buyerId = null,
+                            finalPrice = 0,
+                            auctionStatus = AuctionStatus.FAILED,
+                        )
+                    } else {
+                        AuctionResult(
+                            productId = product.id,
+                            buyerId = highestBid.bidderId,
+                            finalPrice = highestBid.bidPrice,
+                            auctionStatus = AuctionStatus.WAIT,
+                        )
+                    }
 
                 // 데이터 저장
                 productRepository.save(product)

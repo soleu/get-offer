@@ -5,5 +5,4 @@ enum class ProductStatus {
     IN_PROGRESS,
     COMPLETED,
     STOPPED,
-    FAILED,
 }
