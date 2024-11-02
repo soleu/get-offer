@@ -1,0 +1,4 @@
+<h3>Login with:</h3>
+<p th:each="url : ${urls}">
+    <a th:href="${url.value}" th:text="${url.key}">Client</a>
+</p>
