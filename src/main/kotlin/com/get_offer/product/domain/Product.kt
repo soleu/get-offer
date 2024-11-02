@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import org.apache.coyote.BadRequestException
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -41,5 +43,44 @@ class Product(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
-) : AuditingTimeEntity()
+    var id: Long = 0L,
+) : AuditingTimeEntity() {
+    init {
+        validateProduct(startPrice, startDate, endDate)
+    }
+
+    fun updateProduct(dto: ProductEditReq) {
+        if (dto.startPrice != null) {
+            validateStartPrice(dto.startPrice)
+        }
+
+        val startDate = dto.startDate ?: this.startDate
+        val endDate = dto.endDate ?: this.endDate
+        validateDateRange(startDate, endDate)
+    }
+
+    private fun validateProduct(startPrice: Int, startDate: LocalDateTime, endDate: LocalDateTime) {
+        validateStartPrice(startPrice)
+        validateDateRange(startDate, endDate)
+    }
+
+    private fun validateStartPrice(startPrice: Int) {
+        if (startPrice < 0) {
+            throw BadRequestException("startPrice가 0보다 작을 수 없습니다.")
+        }
+    }
+
+    private fun validateDateRange(startDate: LocalDateTime, endDate: LocalDateTime) {
+        if (startDate.isAfter(endDate)) throw BadRequestException("시작 날짜가 유효하지 않습니다.")
+        if (ChronoUnit.DAYS.between(startDate, endDate) > 7) throw BadRequestException("경매 기간은 7일을 넘길 수 없습니다.")
+    }
+
+    companion object {
+        fun checkStatus(startDate: LocalDateTime): ProductStatus {
+            if (LocalDateTime.now().isBefore(startDate)) {
+                return ProductStatus.WAIT
+            }
+            return ProductStatus.IN_PROGRESS
+        }
+    }
+}
