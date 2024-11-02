@@ -1,6 +1,7 @@
 package com.get_offer.common.jwt
 
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import java.time.LocalDateTime
@@ -16,7 +17,6 @@ class TokenService(
     private val secretKey = Keys.hmacShaKeyFor(
         jwtProperties.key.toByteArray()
     )
-
 
     fun issue(
         subject: String,
@@ -35,10 +35,18 @@ class TokenService(
     ): String? = getAllClaims(token)
         .subject
 
-    fun isExpired(token: String): Boolean =
-        getAllClaims(token)
-            .expiration
-            .before(Date(System.currentTimeMillis()))
+    fun verifyToken(token: String): Boolean {
+        return try {
+            val claims: Jws<Claims> = Jwts.parser()
+                .decryptWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+
+            claims.payload.expiration.after(Date())
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     private fun getAllClaims(
         token: String

@@ -22,7 +22,7 @@ class UserIdArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Any? {
-        val token = webRequest.getHeader("token") as String
+        val token = webRequest.getHeader("Authorization") as String
         val subject = tokenService.extractSubject(token)
 
         return AuthUser(

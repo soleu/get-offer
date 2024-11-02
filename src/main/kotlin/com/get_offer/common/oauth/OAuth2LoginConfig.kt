@@ -1,5 +1,8 @@
 package com.get_offer.common.oauth
 
+import com.get_offer.common.jwt.JwtAuthenticationFilter
+import com.get_offer.common.jwt.TokenService
+import com.get_offer.user.repository.UserRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,6 +17,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @Configuration
@@ -22,6 +26,8 @@ class OAuth2LoginConfig(
     private val clientId: String,
     @Value("\${spring.security.oauth2.client.registration.google-login.client-secret}")
     private val clientSecret: String,
+    private val tokenService: TokenService,
+    private val userRepository: UserRepository,
 ) {
     @Bean
     fun clientRegistrationRepository(): ClientRegistrationRepository {
@@ -44,14 +50,20 @@ class OAuth2LoginConfig(
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.authorizeHttpRequests { authorizeHttpRequests ->
-            authorizeHttpRequests.requestMatchers("/oauth_login", "/loginSuccess").permitAll()
-                .anyRequest()
-                .authenticated()
-        }.oauth2Login {
-            it.loginPage("/oauth_login")
-            it.defaultSuccessUrl("/loginSuccess", true)
+        http.authorizeHttpRequests { authorizeRequests ->
+            authorizeRequests
+                .requestMatchers("/oauth_login", "/loginSuccess").permitAll()
+                .anyRequest().authenticated()
         }
+            .oauth2Login {
+                it.loginPage("/oauth_login")
+                it.defaultSuccessUrl("/loginSuccess", true)
+            }
+            .addFilterBefore(
+                JwtAuthenticationFilter(tokenService, userRepository),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
+
         return http.build()
     }
 

@@ -2,7 +2,7 @@ package com.get_offer.product.service
 
 import com.get_offer.common.exception.NotFoundException
 import com.get_offer.common.exception.UnAuthorizationException
-import com.get_offer.multipart.ImageService
+import com.get_offer.common.multipart.ImageService
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductEditReq
