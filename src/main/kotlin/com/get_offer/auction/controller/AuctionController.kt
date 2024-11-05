@@ -6,10 +6,10 @@ import com.get_offer.auction.service.BuyAuctionDetailDto
 import com.get_offer.auction.service.BuyAuctionDto
 import com.get_offer.auction.service.SellAuctionDetailDto
 import com.get_offer.auction.service.SellAuctionDto
+import com.get_offer.login.AuthenticatedUser
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -22,31 +22,31 @@ class AuctionController(
      * 사용자가 판매한 모든 상품을 조회 한다.
      */
     @GetMapping("/sellHistory")
-    fun getUserSellHistory(@RequestParam userId: String): ApiResponse<List<SellAuctionDto>> {
-        return ApiResponse.success(auctionService.getSellHistory(userId.toLong()))
+    fun getUserSellHistory(@AuthenticatedUser userId: Long): ApiResponse<List<SellAuctionDto>> {
+        return ApiResponse.success(auctionService.getSellHistory(userId))
     }
 
     /**
      * 사용자가 경매에서 낙찰된 모든 상품을 조회한다.
      */
     @GetMapping("/buyHistory")
-    fun getUserBuyHistory(@RequestParam userId: String): ApiResponse<List<BuyAuctionDto>> {
-        return ApiResponse.success(auctionService.getBuyHistory(userId.toLong()))
+    fun getUserBuyHistory(@AuthenticatedUser userId: Long): ApiResponse<List<BuyAuctionDto>> {
+        return ApiResponse.success(auctionService.getBuyHistory(userId))
     }
 
     @GetMapping("{auctionId}/sold")
     fun getSoldAuctionDetail(
-        @RequestParam userId: String,
+        @AuthenticatedUser userId: Long,
         @PathVariable auctionId: Long
     ): ApiResponse<SellAuctionDetailDto> {
-        return ApiResponse.success(auctionService.getSoldAuctionDetail(userId.toLong(), auctionId))
+        return ApiResponse.success(auctionService.getSoldAuctionDetail(userId, auctionId))
     }
 
     @GetMapping("{id}/bought")
     fun getBoughtAuctionDetail(
-        @RequestParam userId: String,
+        @AuthenticatedUser userId: Long,
         @PathVariable id: Long
     ): ApiResponse<BuyAuctionDetailDto> {
-        return ApiResponse.success(auctionService.getBoughtAuctionDetail(userId.toLong(), id))
+        return ApiResponse.success(auctionService.getBoughtAuctionDetail(userId, id))
     }
 }

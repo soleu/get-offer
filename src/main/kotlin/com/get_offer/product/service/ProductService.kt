@@ -1,7 +1,7 @@
 package com.get_offer.product.service
 
-import com.get_offer.common.exception.NotFoundException
-import com.get_offer.common.exception.UnAuthorizationException
+import com.get_offer.common.exception.CustomException
+import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.common.multipart.ImageService
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Product
@@ -33,9 +33,11 @@ class ProductService(
     }
 
     fun getProductDetail(id: Long, userId: Long): ProductDetailDto {
-        val product = productRepository.findById(id).orElseThrow { NotFoundException("$id 의 상품은 존재하지 않습니다.") }
+        val product = productRepository.findById(id)
+            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$id 의 상품은 존재하지 않습니다.") }
 
-        val writer = userRepository.findById(id).orElseThrow { NotFoundException("$id 의 사용자는 존재하지 않습니다.") }
+        val writer =
+            userRepository.findById(id).orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$id 의 사용자는 존재하지 않습니다.") }
 
         return ProductDetailDto.of(product, writer, userId)
     }
@@ -63,10 +65,10 @@ class ProductService(
     @Transactional
     fun editProduct(req: ProductEditDto): ProductSaveDto {
         var product = productRepository.findById(req.productId)
-            .orElseThrow { NotFoundException("${req.productId} 의 상품은 존재하지 않습니다.") }
+            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "${req.productId} 의 상품은 존재하지 않습니다.") }
         // access
         if (product.writerId != req.writerId) {
-            throw UnAuthorizationException()
+            throw CustomException(ExceptionCode.UN_AUTHORIZED)
         }
 
         if (product.status != ProductStatus.WAIT) {
