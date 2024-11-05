@@ -9,7 +9,7 @@ import com.get_offer.product.domain.ProductEditReq
 import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.user.domain.UserRepository
 import org.apache.coyote.BadRequestException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -43,9 +43,6 @@ class ProductService(
     @Transactional
     fun postProduct(req: ProductPostReqDto, userId: Long, images: List<MultipartFile>): ProductSaveDto {
         val imageUrls = imageService.saveImages(images)
-
-//        Product.validateProduct(req.startPrice, req.startDate, req.endDate)
-
         val product = productRepository.save(
             Product(
                 title = req.title,

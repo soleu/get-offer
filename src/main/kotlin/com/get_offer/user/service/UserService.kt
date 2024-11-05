@@ -2,7 +2,7 @@ package com.get_offer.user.service
 
 import com.get_offer.common.exception.NotFoundException
 import com.get_offer.user.domain.User
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.user.domain.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

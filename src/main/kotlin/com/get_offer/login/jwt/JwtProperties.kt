@@ -1,4 +1,4 @@
-package com.get_offer.common.jwt
+package com.get_offer.login.jwt
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

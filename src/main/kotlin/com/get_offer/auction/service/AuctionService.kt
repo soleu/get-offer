@@ -7,7 +7,7 @@ import com.get_offer.common.exception.UnAuthorizationException
 import com.get_offer.product.domain.Product
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.User
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.user.domain.UserRepository
 import org.springframework.stereotype.Service
 
 @Service

@@ -1,8 +1,6 @@
-package com.get_offer.common.oauth
+package com.get_offer.login.oauth
 
-import com.get_offer.common.jwt.JwtAuthenticationFilter
-import com.get_offer.common.jwt.TokenService
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.login.jwt.JwtAuthenticationFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,6 +16,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 
 @Configuration
@@ -26,8 +25,7 @@ class OAuth2LoginConfig(
     private val clientId: String,
     @Value("\${spring.security.oauth2.client.registration.google-login.client-secret}")
     private val clientSecret: String,
-    private val tokenService: TokenService,
-    private val userRepository: UserRepository,
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
 ) {
     @Bean
     fun clientRegistrationRepository(): ClientRegistrationRepository {
@@ -50,19 +48,29 @@ class OAuth2LoginConfig(
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.authorizeHttpRequests { authorizeRequests ->
-            authorizeRequests
-                .requestMatchers("/oauth_login", "/loginSuccess").permitAll()
-                .anyRequest().authenticated()
-        }
+        http
+            .csrf {
+                it.disable()
+            }
+            .authorizeHttpRequests { authorizeRequests ->
+                authorizeRequests
+                    .requestMatchers(AntPathRequestMatcher("/h2-console/**")).permitAll()
+                    .requestMatchers("/oauth_login", "/loginSuccess").permitAll()
+                    .anyRequest().authenticated()
+            }
             .oauth2Login {
                 it.loginPage("/oauth_login")
                 it.defaultSuccessUrl("/loginSuccess", true)
             }
             .addFilterBefore(
-                JwtAuthenticationFilter(tokenService, userRepository),
+                jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter::class.java
             )
+            .headers {
+                it.frameOptions { options ->
+                    options.sameOrigin()
+                }
+            }
 
         return http.build()
     }

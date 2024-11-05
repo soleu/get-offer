@@ -1,6 +1,5 @@
-package com.get_offer.user.repository
+package com.get_offer.user.domain
 
-import com.get_offer.user.domain.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

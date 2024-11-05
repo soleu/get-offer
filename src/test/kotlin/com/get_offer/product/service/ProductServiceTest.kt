@@ -9,7 +9,7 @@ import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.User
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.user.domain.UserRepository
 import java.time.LocalDateTime
 import java.util.*
 import org.apache.coyote.BadRequestException

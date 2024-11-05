@@ -1,19 +1,24 @@
 package com.get_offer.login
 
-import com.get_offer.common.jwt.TokenService
+import com.get_offer.login.jwt.TokenService
 import org.springframework.core.MethodParameter
+
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
+@Target(AnnotationTarget.VALUE_PARAMETER)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class AuthenticatedUser
+
 @Component
-class UserIdArgumentResolver(
+class UserArgumentResolver(
     private val tokenService: TokenService,
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.parameterType == AuthUser::class.java
+        return parameter.hasParameterAnnotation(AuthenticatedUser::class.java)
     }
 
     override fun resolveArgument(
@@ -25,8 +30,6 @@ class UserIdArgumentResolver(
         val token = webRequest.getHeader("Authorization") as String
         val subject = tokenService.extractSubject(token)
 
-        return AuthUser(
-            userId = subject?.toLong() ?: 0
-        )
+        return subject?.toLong() ?: 0
     }
 }

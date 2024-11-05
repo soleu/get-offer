@@ -1,6 +1,6 @@
 package com.get_offer.login
 
-import com.get_offer.common.jwt.TokenService
+import com.get_offer.login.jwt.TokenService
 import com.get_offer.user.service.UserService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

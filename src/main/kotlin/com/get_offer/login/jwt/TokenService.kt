@@ -1,4 +1,4 @@
-package com.get_offer.common.jwt
+package com.get_offer.login.jwt
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
@@ -22,11 +22,9 @@ class TokenService(
         subject: String,
         expirationDate: LocalDateTime = LocalDateTime.now().plusSeconds(jwtProperties.accessTokenExpiration)
     ): String = Jwts.builder()
-        .claims()
         .subject(subject)
         .issuedAt(Date(System.currentTimeMillis()))
         .expiration(Date.from(expirationDate.atZone(ZoneId.systemDefault()).toInstant()))
-        .and()
         .signWith(secretKey)
         .compact()
 
@@ -38,7 +36,7 @@ class TokenService(
     fun verifyToken(token: String): Boolean {
         return try {
             val claims: Jws<Claims> = Jwts.parser()
-                .decryptWith(secretKey)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
 
