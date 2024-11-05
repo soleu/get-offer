@@ -149,7 +149,9 @@ class ProductServiceTest {
         val userId = 1L
         val productReqDto = makeProductPostDto().copy(
             // Invalid start date (after end date))
-            startDate = LocalDateTime.now().plusDays(10)
+            startDate = LocalDateTime.now().plusDays(10),
+            endDate = LocalDateTime.now().plusDays(3)
+            
         )
 
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
@@ -197,8 +199,8 @@ class ProductServiceTest {
             title = "Test Product",
             description = "Test Description",
             startPrice = 1000,
-            startDate = LocalDateTime.now().plusDays(10),  // Invalid start date (after end date)
-            endDate = LocalDateTime.now().plusDays(3),
+            startDate = LocalDateTime.now().plusDays(10),
+            endDate = LocalDateTime.now().plusDays(13),
             category = Category.BOOKS
         )
     }

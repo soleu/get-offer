@@ -31,7 +31,7 @@ class UserIntegrationTest(
     @Test
     fun userInfoIntegrationTest() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/users").param("userId", "1").header("Authorization", token)
+            MockMvcRequestBuilders.get("/users").header("Authorization", token)
         ).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.nickname").value("test")).andExpect(
                 MockMvcResultMatchers.jsonPath("$.data.profileImage")
