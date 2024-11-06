@@ -9,6 +9,8 @@ import com.get_offer.auction.service.SellAuctionDto
 import com.get_offer.login.AuthenticatedUser
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -48,5 +50,15 @@ class AuctionController(
         @PathVariable id: Long
     ): ApiResponse<BuyAuctionDetailDto> {
         return ApiResponse.success(auctionService.getBoughtAuctionDetail(userId, id))
+    }
+
+    @PostMapping("{auctionId}/bid")
+    fun bidAuction(
+        @AuthenticatedUser userId: Long,
+        @PathVariable auctionId: Long,
+        @RequestBody bidRequest: BidRequest
+    ): ApiResponse<Void> {
+        auctionService.bidAuction(userId, auctionId, bidRequest)
+        return ApiResponse.success(null)
     }
 }

@@ -49,6 +49,21 @@ class Product(
         validateProduct(startPrice, startDate, endDate)
     }
 
+    fun placeBid(bidPrice: Int, userId: Long) {
+        if (writerId == userId) {
+            throw BadRequestException("판매자가 경매를 할수는 없습니다.")
+        }
+        if (currentPrice >= bidPrice) {
+            throw BadRequestException("경매가가 경매 금액보다 낮을 수는 없습니다.")
+        }
+
+        if (status != ProductStatus.IN_PROGRESS) {
+            throw BadRequestException("진행중인 경매만 입찰을 할 수 있습니다.")
+        }
+
+        this.currentPrice = bidPrice
+    }
+
     fun updateNonNullFields(newProductReq: ProductEditReq) {
         newProductReq.startDate?.let { this.startDate = it }
         newProductReq.endDate?.let { this.endDate = it }

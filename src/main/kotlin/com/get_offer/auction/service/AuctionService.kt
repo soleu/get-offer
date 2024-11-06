@@ -1,7 +1,10 @@
 package com.get_offer.auction.service
 
+import com.get_offer.auction.controller.BidRequest
 import com.get_offer.auction.domain.AuctionResult
 import com.get_offer.auction.domain.AuctionResultRepository
+import com.get_offer.auction.domain.Bid
+import com.get_offer.auction.domain.BidRepository
 import com.get_offer.common.exception.CustomException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.product.domain.Product
@@ -9,11 +12,13 @@ import com.get_offer.product.domain.ProductRepository
 import com.get_offer.user.domain.User
 import com.get_offer.user.domain.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AuctionService(
     private val productRepository: ProductRepository,
     private val auctionRepository: AuctionResultRepository,
+    private val bidRepository: BidRepository,
     private val userRepository: UserRepository,
 ) {
     fun getSellHistory(userId: Long): List<SellAuctionDto> {
@@ -49,6 +54,22 @@ class AuctionService(
         val seller = getUser(product.writerId)
 
         return BuyAuctionDetailDto.of(product, seller, auction)
+    }
+
+    @Transactional
+    fun bidAuction(userId: Long, productId: Long, bidRequest: BidRequest) {
+        val product = productRepository.findByIdWithLock(productId)
+            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$productId 의 경매 내역은 존재하지 않습니다.") }
+
+        product.placeBid(bidRequest.bidPrice, userId)
+
+        bidRepository.save(
+            Bid(
+                productId = product.id,
+                bidderId = userId,
+                biddingPrice = bidRequest.bidPrice,
+            )
+        )
     }
 
     private fun getAuctionAndProduct(auctionId: Long): Pair<AuctionResult, Product> {

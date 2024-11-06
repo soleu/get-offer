@@ -9,6 +9,9 @@ VALUES (1, 'test', 'https://drive.google.com/file/d/1R9EIOoEWWgPUhY6e-t4VFuqMgkn
 INSERT INTO USERS (ID, NICKNAME, IMAGE, CREATED_AT, UPDATED_AT)
 VALUES (2, 'test2', 'https://drive.google.com/file/d/1R9EIOoEWWgPUhY6e-t4VFuqMgknl7rm8/view?usp=sharing',
         '2024-01-01 00:00:00', '2024-01-01 00:00:00');
+INSERT INTO USERS (ID, NICKNAME, IMAGE, CREATED_AT, UPDATED_AT)
+VALUES (3, 'test3', 'https://drive.google.com/file/d/1R9EIOoEWWgPUhY6e-t4VFuqMgknl7rm8/view?usp=sharing',
+        '2024-01-01 00:00:00', '2024-01-01 00:00:00');
 
 
 INSERT INTO PRODUCTS (ID, WRITER_ID, TITLE, DESCRIPTION, CATEGORY, CURRENT_PRICE, START_PRICE, STATUS, START_DATE,
