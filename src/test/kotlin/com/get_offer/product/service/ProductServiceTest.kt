@@ -6,8 +6,8 @@ import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductImagesVo
+import com.get_offer.product.domain.ProductRepository
 import com.get_offer.product.domain.ProductStatus
-import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.User
 import com.get_offer.user.domain.UserRepository
 import java.time.LocalDateTime
@@ -151,7 +151,7 @@ class ProductServiceTest {
             // Invalid start date (after end date))
             startDate = LocalDateTime.now().plusDays(10),
             endDate = LocalDateTime.now().plusDays(3)
-            
+
         )
 
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))

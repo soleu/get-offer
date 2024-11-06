@@ -7,8 +7,8 @@ import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductEditReq
 import com.get_offer.product.domain.ProductImagesVo
+import com.get_offer.product.domain.ProductRepository
 import com.get_offer.product.domain.ProductStatus
-import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.UserRepository
 import org.apache.coyote.BadRequestException
 import org.springframework.data.domain.Page

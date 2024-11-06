@@ -1,8 +1,8 @@
 package com.get_offer.auction.service
 
 import com.get_offer.TestFixtures
-import com.get_offer.auction.controller.repository.AuctionResultRepository
-import com.get_offer.product.repository.ProductRepository
+import com.get_offer.auction.domain.AuctionResultRepository
+import com.get_offer.product.domain.ProductRepository
 import com.get_offer.user.domain.UserRepository
 import java.util.*
 import org.assertj.core.api.Assertions

@@ -1,6 +1,5 @@
-package com.get_offer.auction.controller.repository
+package com.get_offer.auction.domain
 
-import com.get_offer.auction.domain.Bid
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

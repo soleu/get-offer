@@ -1,11 +1,11 @@
 package com.get_offer.auction.service
 
-import com.get_offer.auction.controller.repository.AuctionResultRepository
 import com.get_offer.auction.domain.AuctionResult
+import com.get_offer.auction.domain.AuctionResultRepository
 import com.get_offer.common.exception.CustomException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.product.domain.Product
-import com.get_offer.product.repository.ProductRepository
+import com.get_offer.product.domain.ProductRepository
 import com.get_offer.user.domain.User
 import com.get_offer.user.domain.UserRepository
 import org.springframework.stereotype.Service
