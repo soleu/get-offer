@@ -1,6 +1,7 @@
 package com.get_offer.auction.domain
 
 import com.get_offer.common.AuditingTimeEntity
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -13,9 +14,10 @@ import jakarta.persistence.Table
 @Table(name = "AUCTION_RESULTS")
 class AuctionResult(
 
+    @Column(unique = true)
     val productId: Long,
 
-    val buyerId: Long,
+    val buyerId: Long = 0L,
 
     val finalPrice: Int,
 
