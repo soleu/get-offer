@@ -44,8 +44,6 @@ class ProductService(
     fun postProduct(req: ProductPostReqDto, userId: Long, images: List<MultipartFile>): ProductSaveDto {
         val imageUrls = imageService.saveImages(images)
 
-        Product.validateProduct(req.startPrice, req.startDate, req.endDate)
-
         val product = productRepository.save(
             Product(
                 title = req.title,
