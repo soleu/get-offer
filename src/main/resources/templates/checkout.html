@@ -5,6 +5,7 @@
     <script src="https://js.tosspayments.com/v2/standard"></script>
 </head>
 <body>
+
 <!-- 할인 쿠폰 -->
 <div>
     <input id="coupon-box" type="checkbox"/>
@@ -30,11 +31,18 @@
     const orderId = [[${orderId}]]
 
     const clientKey = [[${clientKey}]]
-    /*]]>*/
+    const scriptUrl = /*[[${scriptUrl}]]*/ "";
+</script>
+/*]]>*/
 </script>
 
 <script>
-    main();
+    const script = document.createElement("script");
+    script.src = scriptUrl;
+    script.onload = function() {
+        main(); // 스크립트가 로드된 후 main 함수 호출
+    };
+    document.head.appendChild(script);
 
     async function main() {
         const button = document.getElementById("payment-button");

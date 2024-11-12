@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class WidgetController(
-    @Value("\${toss.client_key}") private val clientKey: String,
-    @Value("\${toss.secret_key}") private val secretKey: String,
+    @Value("\${toss.payments.client_key}") private val clientKey: String,
+    @Value("\${toss.payments.secret_key}") private val secretKey: String,
+    @Value("\${toss.payments.scriptUrl}") private val scriptUrl: String
 
-    ) {
+) {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
     private val objectMapper = ObjectMapper()
@@ -96,6 +97,8 @@ class WidgetController(
         model.addAttribute("orderName", req.orderName)
         model.addAttribute("orderId", req.orderId)
         model.addAttribute("clientKey", clientKey)
+        model.addAttribute("scriptUrl", scriptUrl)
+
         return "checkout"
     }
 
