@@ -49,7 +49,7 @@ class Product(
         validateProduct(startPrice, startDate, endDate)
     }
 
-    fun updateNonNullFields(newProductReq: ProductEditReq) {
+    fun update(newProductReq: ProductEditReq) {
         newProductReq.startDate?.let { this.startDate = it }
         newProductReq.endDate?.let { this.endDate = it }
         newProductReq.title?.let { this.title = it }

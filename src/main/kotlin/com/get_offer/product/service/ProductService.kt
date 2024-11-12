@@ -80,7 +80,7 @@ class ProductService(
             imageService.saveImages(req.images)
         } else null
 
-        product.updateNonNullFields(ProductEditReq.of(req, imageUrls))
+        product.update(ProductEditReq.of(req, imageUrls))
 
         return ProductSaveDto.of(product)
     }
