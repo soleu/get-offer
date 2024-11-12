@@ -17,6 +17,18 @@
 <!-- 결제하기 버튼 -->
 <button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
 
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const userId = [[${userId}]]
+    let amount = [[${amount}]]
+    const username = [[${username}]]
+    const email = [[${email}]]
+    const phone = [[${phone}]]
+    const orderName = [[${orderName}]]
+    const orderId = [[${orderId}]]
+    /*]]>*/
+</script>
+
 <script>
     main();
 
@@ -27,17 +39,15 @@
         const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
         const tossPayments = TossPayments(clientKey);
         // 회원 결제
-        const customerKey = "_bn7rBLMOj2JJm6IzxU98";
+        const customerKey = userId
         const widgets = tossPayments.widgets({
             customerKey,
         });
-        // 비회원 결제
-        // const widgets = tossPayments.widgets({ customerKey: TossPayments.ANONYMOUS });
 
         // ------ 주문의 결제 금액 설정 ------
         await widgets.setAmount({
             currency: "KRW",
-            value: 50000,
+            value: amount,
         });
 
         await Promise.all([
@@ -53,9 +63,10 @@
         // ------  주문서의 결제 금액이 변경되었을 경우 결제 금액 업데이트 ------
         coupon.addEventListener("change", async function () {
             if (coupon.checked) {
+                amount -= 5000
                 await widgets.setAmount({
                     currency: "KRW",
-                    value: 50000 - 5000,
+                    value: amount,
                 });
 
                 return;
@@ -63,20 +74,20 @@
 
             await widgets.setAmount({
                 currency: "KRW",
-                value: 50000,
+                value: amount,
             });
         });
 
         // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
         button.addEventListener("click", async function () {
             await widgets.requestPayment({
-                orderId: "eKJ3DXb9rwthJzYj5-gGo",
-                orderName: "토스 티셔츠 외 2건",
+                orderId: orderId,
+                orderName: orderName,
                 successUrl: window.location.origin + "/success",
                 failUrl: window.location.origin + "/fail",
-                customerEmail: "customer123@gmail.com",
-                customerName: "김토스",
-                customerMobilePhone: "01012341234",
+                customerEmail: email,
+                customerName: username,
+                customerMobilePhone: phone,
             });
         });
     }

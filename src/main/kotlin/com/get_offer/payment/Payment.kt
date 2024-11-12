@@ -13,7 +13,9 @@ class Payment(
     // payments 관련 정보 저장
     val userId: Long,
 
-    val auctionId: Long,
+    val auctionId: String, // 추후에 uuid도 검토
+
+    val paymentId: String,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

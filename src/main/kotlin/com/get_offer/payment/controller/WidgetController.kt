@@ -10,6 +10,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -68,7 +69,26 @@ class WidgetController {
     }
 
     @GetMapping("/checkout")
-    fun checkout(): String {
+    fun checkout(
+        @RequestBody req: CheckoutRequest,
+        model: Model
+    ): String {
+        // for test
+//        model.addAttribute("userId", "MusDYSpBVRRY6xr_s07r3")
+//        model.addAttribute("email", "dlthf555@gmail.com")
+//        model.addAttribute("username", "이솔")
+//        model.addAttribute("phone", "01037352510")
+//        model.addAttribute("amount", 15000)
+//        model.addAttribute("orderName", "대머리 3종 세트")
+//        model.addAttribute("orderId", "Al3xzVz7IC3iHapiJj19Y")
+
+        model.addAttribute("userId", req.userId)
+        model.addAttribute("email", req.email)
+        model.addAttribute("username", req.username)
+        model.addAttribute("phone", req.phone)
+        model.addAttribute("amount", req.amount)
+        model.addAttribute("orderName", req.orderName)
+        model.addAttribute("orderId", req.orderId)
         return "checkout"
     }
 
