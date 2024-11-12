@@ -62,6 +62,7 @@ class EndAuctionJobConfiguration(
                             buyerId = 0L,
                             finalPrice = 0,
                             auctionStatus = AuctionStatus.FAILED,
+                            auctionName = "UNSOLD",
                         )
                     } else {
                         AuctionResult(
@@ -69,6 +70,7 @@ class EndAuctionJobConfiguration(
                             buyerId = highestBid.bidderId,
                             finalPrice = highestBid.bidPrice,
                             auctionStatus = AuctionStatus.WAIT,
+                            auctionName = product.title,
                         )
                     }
 

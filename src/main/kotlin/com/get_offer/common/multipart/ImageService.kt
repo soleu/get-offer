@@ -1,4 +1,4 @@
-package com.get_offer.multipart
+package com.get_offer.common.multipart
 
 import com.get_offer.common.s3.S3FileManagement
 import org.springframework.stereotype.Service

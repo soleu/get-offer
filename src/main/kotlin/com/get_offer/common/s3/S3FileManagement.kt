@@ -1,6 +1,6 @@
 package com.get_offer.common.s3
 
-import com.get_offer.multipart.FileValidate
+import com.get_offer.common.multipart.FileValidate
 import java.util.*
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

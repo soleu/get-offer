@@ -20,12 +20,16 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     const userId = [[${userId}]]
-    let amount = [[${amount}]]
-    const username = [[${username}]]
     const email = [[${email}]]
+    const username = [[${username}]]
     const phone = [[${phone}]]
+
+    let amount = [[${amount}]]
+    const originalAmount = amount;
     const orderName = [[${orderName}]]
     const orderId = [[${orderId}]]
+
+    const clientKey = [[${clientKey}]]
     /*]]>*/
 </script>
 
@@ -36,7 +40,6 @@
         const button = document.getElementById("payment-button");
         const coupon = document.getElementById("coupon-box");
         // ------  결제위젯 초기화 ------
-        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
         const tossPayments = TossPayments(clientKey);
         // 회원 결제
         const customerKey = userId
@@ -70,6 +73,8 @@
                 });
 
                 return;
+            } else {
+                amount = originalAmount
             }
 
             await widgets.setAmount({

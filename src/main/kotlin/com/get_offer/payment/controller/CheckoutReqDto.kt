@@ -1,6 +1,6 @@
 package com.get_offer.payment.controller
 
-data class CheckoutRequest(
+data class CheckoutReqDto(
     val userId: String,
     val email: String,
     val username: String,

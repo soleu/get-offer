@@ -1,6 +1,7 @@
 package com.get_offer.product.controller
 
 import ApiResponse
+import com.get_offer.login.AuthenticatedUser
 import com.get_offer.product.service.ProductDetailDto
 import com.get_offer.product.service.ProductEditDto
 import com.get_offer.product.service.ProductListDto
@@ -24,41 +25,41 @@ class ProductController(
 ) {
     @GetMapping
     fun getProductList(
-        @RequestParam userId: String, @RequestParam page: Int, @RequestParam size: Int
+        @AuthenticatedUser userId: Long, @RequestParam page: Int, @RequestParam size: Int
     ): ApiResponse<PageResponse<ProductListDto>> {
         return ApiResponse.success(
             PageResponse.from(
                 productService.getProductList(
-                    userId.toLong(), PageRequest.of(page, size)
+                    userId, PageRequest.of(page, size)
                 )
             )
         )
     }
 
     @GetMapping("{id}/detail")
-    fun getProductDetail(@PathVariable id: String, @RequestParam userId: String): ApiResponse<ProductDetailDto> {
-        return ApiResponse.success(productService.getProductDetail(id.toLong(), userId.toLong()))
+    fun getProductDetail(@PathVariable id: String, @AuthenticatedUser userId: Long): ApiResponse<ProductDetailDto> {
+        return ApiResponse.success(productService.getProductDetail(id.toLong(), userId))
     }
 
     @PostMapping
     fun postProduct(
-        @RequestParam userId: String,
+        @AuthenticatedUser userId: Long,
         @RequestPart("images") images: List<MultipartFile>,
         @RequestPart productReqDto: ProductPostReqDto
     ): ApiResponse<ProductSaveDto> {
-        return ApiResponse.success(productService.postProduct(productReqDto, userId.toLong(), images))
+        return ApiResponse.success(productService.postProduct(productReqDto, userId, images))
     }
 
     @PutMapping("{productId}")
     fun editProduct(
         @PathVariable productId: Long,
-        @RequestParam userId: String,
+        @AuthenticatedUser userId: Long,
         @RequestPart("images") images: List<MultipartFile>?,
         @RequestPart productReqDto: ProductEditReqDto
     ): ApiResponse<ProductSaveDto> {
         return ApiResponse.success(
             productService.editProduct(
-                ProductEditDto.of(productId, productReqDto, userId.toLong(), images)
+                ProductEditDto.of(productId, productReqDto, userId, images)
             )
         )
     }

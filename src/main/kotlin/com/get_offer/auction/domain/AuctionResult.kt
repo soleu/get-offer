@@ -17,6 +17,8 @@ class AuctionResult(
     @Column(unique = true)
     val productId: Long,
 
+    val auctionName: String,
+
     val buyerId: Long = 0L,
 
     val finalPrice: Int,

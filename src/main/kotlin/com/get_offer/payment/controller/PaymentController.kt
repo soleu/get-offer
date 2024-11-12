@@ -26,7 +26,6 @@ class PaymentController(
         @RequestParam orderId: Long,
     ): String {
         return paymentService.checkout(userId, orderId)
-
     }
 
     /**
@@ -35,8 +34,7 @@ class PaymentController(
     @PostMapping("/save")
     fun savePayment(
         @RequestParam userId: Long, @RequestBody req: SavePaymentReqDto
-    ): ApiResponse<Void> {
-        paymentService.savePayment(SavePaymentReq.of(req, userId))
-        return ApiResponse.success(null)
+    ): ApiResponse<Boolean> {
+        return ApiResponse.success(paymentService.savePayment(SavePaymentReq.of(req, userId)))
     }
 }

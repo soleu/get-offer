@@ -1,15 +1,15 @@
 package com.get_offer.product.service
 
-import com.get_offer.common.exception.NotFoundException
-import com.get_offer.common.exception.UnAuthorizationException
-import com.get_offer.multipart.ImageService
+import com.get_offer.common.exception.ApiException
+import com.get_offer.common.exception.ExceptionCode
+import com.get_offer.common.multipart.ImageService
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductEditReq
 import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.user.domain.UserRepository
 import org.apache.coyote.BadRequestException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -33,9 +33,11 @@ class ProductService(
     }
 
     fun getProductDetail(id: Long, userId: Long): ProductDetailDto {
-        val product = productRepository.findById(id).orElseThrow { NotFoundException("$id 의 상품은 존재하지 않습니다.") }
+        val product = productRepository.findById(id)
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$id 의 상품은 존재하지 않습니다.") }
 
-        val writer = userRepository.findById(id).orElseThrow { NotFoundException("$id 의 사용자는 존재하지 않습니다.") }
+        val writer =
+            userRepository.findById(id).orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$id 의 사용자는 존재하지 않습니다.") }
 
         return ProductDetailDto.of(product, writer, userId)
     }
@@ -63,11 +65,11 @@ class ProductService(
 
     @Transactional
     fun editProduct(req: ProductEditDto): ProductSaveDto {
-        var product = productRepository.findById(req.productId)
-            .orElseThrow { NotFoundException("${req.productId} 의 상품은 존재하지 않습니다.") }
+        val product = productRepository.findById(req.productId)
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "${req.productId} 의 상품은 존재하지 않습니다.") }
         // access
         if (product.writerId != req.writerId) {
-            throw UnAuthorizationException()
+            throw ApiException(ExceptionCode.UN_AUTHORIZED)
         }
 
         if (product.status != ProductStatus.WAIT) {
@@ -79,9 +81,7 @@ class ProductService(
             imageService.saveImages(req.images)
         } else null
 
-
-        product.updateProduct(ProductEditReq.of(req, imageUrls))
-        productRepository.save(product)
+        product.update(ProductEditReq.of(req, imageUrls))
 
         return ProductSaveDto.of(product)
     }

@@ -19,18 +19,18 @@ import org.apache.coyote.BadRequestException
 class Product(
     val writerId: Long,
 
-    val title: String,
+    var title: String,
 
     @Enumerated(EnumType.STRING)
-    val category: Category,
+    var category: Category,
 
     @Convert(converter = ProductImagesConverter::class)
     @Column(name = "IMAGES")
-    val images: ProductImagesVo,
+    var images: ProductImagesVo,
 
-    val description: String,
+    var description: String,
 
-    val startPrice: Int,
+    var startPrice: Int,
 
     var currentPrice: Int,
 
@@ -49,15 +49,15 @@ class Product(
         validateProduct(startPrice, startDate, endDate)
     }
 
-    fun updateProduct(dto: ProductEditReq) {
-        if (dto.startPrice != null) {
-            validateStartPrice(dto.startPrice)
-        }
-
-        val startDate = dto.startDate ?: this.startDate
-        val endDate = dto.endDate ?: this.endDate
-        validateDateRange(startDate, endDate)
+    fun update(newProductReq: ProductEditReq) {
+        newProductReq.startDate?.let { this.startDate = it }
+        newProductReq.endDate?.let { this.endDate = it }
+        newProductReq.title?.let { this.title = it }
+        newProductReq.category?.let { this.category = it }
+        newProductReq.startPrice?.let { this.startPrice = it }
+        newProductReq.images?.let { this.images = ProductImagesVo(it) }
     }
+
 
     private fun validateProduct(startPrice: Int, startDate: LocalDateTime, endDate: LocalDateTime) {
         validateStartPrice(startPrice)

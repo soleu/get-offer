@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -17,10 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class WidgetController {
+class WidgetController(
+    @Value("\${toss.client_key}") private val clientKey: String,
+    @Value("\${toss.secret_key}") private val secretKey: String,
+
+    ) {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
-    private val objectMapper = ObjectMapper() // ObjectMapper 인스턴스 생성
+    private val objectMapper = ObjectMapper()
+
 
     @PostMapping("/confirm")
     fun confirmPayment(@RequestBody jsonBody: String): ResponseEntity<Map<String, Any>> {
@@ -40,7 +46,7 @@ class WidgetController {
             "paymentKey" to paymentKey
         )
 
-        val widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6"
+        val widgetSecretKey = secretKey
         val authorizations =
             "Basic " + Base64.getEncoder().encodeToString("$widgetSecretKey:".toByteArray(StandardCharsets.UTF_8))
 
@@ -70,7 +76,7 @@ class WidgetController {
 
     @GetMapping("/checkout")
     fun checkout(
-        @RequestBody req: CheckoutRequest,
+        @RequestBody req: CheckoutReqDto,
         model: Model
     ): String {
         // for test
@@ -89,6 +95,7 @@ class WidgetController {
         model.addAttribute("amount", req.amount)
         model.addAttribute("orderName", req.orderName)
         model.addAttribute("orderId", req.orderId)
+        model.addAttribute("clientKey", clientKey)
         return "checkout"
     }
 

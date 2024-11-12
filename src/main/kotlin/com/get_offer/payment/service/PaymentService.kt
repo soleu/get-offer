@@ -1,11 +1,13 @@
 package com.get_offer.payment.service
 
 import com.get_offer.auction.controller.repository.AuctionResultRepository
+import com.get_offer.common.exception.ApiException
+import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.payment.Payment
-import com.get_offer.payment.controller.CheckoutRequest
-import com.get_offer.payment.controller.FrontendClient
+import com.get_offer.payment.controller.CheckoutReqDto
 import com.get_offer.payment.domain.PaymentRepository
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.user.domain.UserRepository
+import org.apache.coyote.BadRequestException
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,29 +22,29 @@ class PaymentService(
         orderId: Long,
     ): String {
         val user = userRepository.findById(userId)
-            .orElseThrow()
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$userId 의 사용자는 존재하지 않습니다.") }
         val order = auctionRepository.findById(orderId)
-            .orElseThrow()
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$orderId 의 경매 내역은 존재하지 않습니다.") }
 
         return frontendClient.checkout(
-            CheckoutRequest(
+            CheckoutReqDto(
                 userId = user.id.toString(),
-                email = "",
+                email = user.email,
                 username = user.nickname,
-                phone = "",
+                phone = user.phone,
                 amount = order.finalPrice,
-                orderName = "",
+                orderName = order.auctionName,
                 orderId = order.id,
             )
         )
     }
 
-    fun savePayment(req: SavePaymentReq) {
+    fun savePayment(req: SavePaymentReq): Boolean {
         val order = auctionRepository.findById(req.orderId.toLong())
             .orElseThrow()
 
         if (order.finalPrice != req.amount) {
-            throw IllegalArgumentException()
+            throw BadRequestException("결제 정보와 최종 가격이 다릅니다")
         }
 
         paymentRepository.save(
@@ -52,5 +54,6 @@ class PaymentService(
                 paymentId = req.paymentKey,
             )
         )
+        return true
     }
 }

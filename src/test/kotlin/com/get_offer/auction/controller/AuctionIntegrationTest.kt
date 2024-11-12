@@ -1,6 +1,9 @@
 package com.get_offer.auction.controller
 
+import com.get_offer.login.jwt.TokenService
+import java.time.LocalDateTime
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -16,11 +19,21 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @AutoConfigureMockMvc
 class AuctionIntegrationTest(
     @Autowired val mockMvc: MockMvc,
+    @Autowired val tokenService: TokenService,
 ) {
+    lateinit var tokenUser1: String
+    lateinit var tokenUser2: String
+
+    @BeforeEach
+    fun setUp() {
+        tokenUser1 = tokenService.issue("1", LocalDateTime.now().plusDays(1))
+        tokenUser2 = tokenService.issue("2", LocalDateTime.now().plusDays(1))
+    }
+
     @Test
     fun auctionSellIntegrationTest() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/auctions/sellHistory").param("userId", "1")
+            MockMvcRequestBuilders.get("/auctions/sellHistory").header("Authorization", tokenUser1)
         ).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(3))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").value("1"))
@@ -43,7 +56,7 @@ class AuctionIntegrationTest(
     @Test
     fun auctionBuyIntegrationTest() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/auctions/buyHistory").param("userId", "2")
+            MockMvcRequestBuilders.get("/auctions/buyHistory").header("Authorization", tokenUser2)
         ).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(1))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].productId").value("1"))
@@ -59,7 +72,7 @@ class AuctionIntegrationTest(
     @Test
     fun getSoldAuctionDetailIntegrationTest() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/auctions/1/sold").param("userId", "1")
+            MockMvcRequestBuilders.get("/auctions/1/sold").header("Authorization", tokenUser1)
         ).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.auctionId").value("1"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.auctionStatus").value("COMPLETED"))
@@ -73,7 +86,7 @@ class AuctionIntegrationTest(
     @Test
     fun getBoughtAuctionDetailIntegrationTest() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/auctions/1/bought").param("userId", "2")
+            MockMvcRequestBuilders.get("/auctions/1/bought").header("Authorization", tokenUser2)
         ).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.auctionId").value("1"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.auctionStatus").value("COMPLETED"))
