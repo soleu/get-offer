@@ -2,14 +2,12 @@ package com.get_offer.common.exception
 
 import org.springframework.http.HttpStatus
 
-class CustomException(val code: ExceptionCode, override var message: String?) : RuntimeException(message) {
+class ApiException(val code: ExceptionCode, override var message: String? = null) : RuntimeException(message) {
     init {
         if (message != null) {
             code.message = message as String
         }
     }
-
-    constructor(code: ExceptionCode) : this(code, null)
 }
 
 

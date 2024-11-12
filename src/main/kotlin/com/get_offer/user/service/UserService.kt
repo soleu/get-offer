@@ -1,6 +1,6 @@
 package com.get_offer.user.service
 
-import com.get_offer.common.exception.CustomException
+import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.user.domain.User
 import com.get_offer.user.domain.UserRepository
@@ -14,7 +14,7 @@ class UserService(
 ) {
     fun getUserInfo(id: Long): UserInfoDto {
         return UserInfoDto.of(userRepository
-            .findById(id).orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$id 의 사용자는 존재하지 않습니다.") })
+            .findById(id).orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$id 의 사용자는 존재하지 않습니다.") })
     }
 
     @Transactional
