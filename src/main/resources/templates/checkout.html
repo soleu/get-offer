@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <title>결제 승인</title>
     <meta charset="utf-8"/>
 </head>
 <body>
@@ -31,14 +32,13 @@
 
     const clientKey = [[${clientKey}]]
     const scriptUrl = /*[[${scriptUrl}]]*/ "";
-</script>
-/*]]>*/
+    /*]]>*/
 </script>
 
 <script>
     const script = document.createElement("script");
     script.src = scriptUrl;
-    script.onload = function() {
+    script.onload = function () {
         main(); // 스크립트가 로드된 후 main 함수 호출
     };
     document.head.appendChild(script);
