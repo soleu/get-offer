@@ -1,7 +1,10 @@
 package com.get_offer.product.controller
 
+import com.get_offer.login.jwt.TokenService
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.time.LocalDateTime
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -22,11 +25,19 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc
 class ProductIntegrationTest(
     @Autowired val mockMvc: MockMvc,
+    @Autowired val tokenService: TokenService,
 ) {
+    lateinit var token: String
+
+    @BeforeEach
+    fun setUp() {
+        token = tokenService.issue("1", LocalDateTime.now().plusDays(1))
+    }
+
     @Test
     fun productListIntegrationTest() {
         mockMvc.perform(
-            get("/products").param("userId", "1").param("page", "0").param("size", "30")
+            get("/products").header("Authorization", token).param("page", "0").param("size", "30")
         ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk)
             .andExpect(jsonPath("$.data.pageNumber").value(0)).andExpect(jsonPath("$.data.pageSize").value(30))
             .andExpect(jsonPath("$.data.totalElements").value(2)).andExpect(jsonPath("$.data.totalPages").value(1))
@@ -45,7 +56,7 @@ class ProductIntegrationTest(
     @Test
     fun productDetailIntegrationTest() {
         mockMvc.perform(
-            get("/products/1/detail").param("userId", "1")
+            get("/products/1/detail").header("Authorization", token)
         ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk).andExpect(jsonPath("$.data.id").value("1"))
             .andExpect(jsonPath("$.data.name").value("nintendo")).andExpect(jsonPath("$.data.writer.id").value("1"))
             .andExpect(jsonPath("$.data.writer.nickname").value("test"))
@@ -84,7 +95,8 @@ class ProductIntegrationTest(
 
         // MockMvc 요청 작성 및 실행
         mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/products").file(imageFile).file(productReqDtoFile).param("userId", "1")
+            MockMvcRequestBuilders.multipart("/products").file(imageFile).file(productReqDtoFile)
+                .header("Authorization", token)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andExpect(status().isOk).andExpect(jsonPath("$.data.title").value("솔 타이틀"))
             .andExpect(jsonPath("$.data.writerId").value(1))
@@ -115,7 +127,7 @@ class ProductIntegrationTest(
 
         // MockMvc 요청 작성 및 실행
         mockMvc.perform(
-            builder.file(imageFile).file(productReqDtoFile).param("userId", "1")
+            builder.file(imageFile).file(productReqDtoFile).header("Authorization", token)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
         ).andExpect(status().isOk).andExpect(jsonPath("$.data.title").value("수정된 제목"))
             .andExpect(jsonPath("$.data.writerId").value(1))

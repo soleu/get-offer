@@ -1,7 +1,7 @@
 package com.get_offer.product.service
 
 import com.get_offer.TestFixtures
-import com.get_offer.multipart.ImageService
+import com.get_offer.common.multipart.ImageService
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product
@@ -9,7 +9,7 @@ import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.repository.ProductRepository
 import com.get_offer.user.domain.User
-import com.get_offer.user.repository.UserRepository
+import com.get_offer.user.domain.UserRepository
 import java.time.LocalDateTime
 import java.util.*
 import org.apache.coyote.BadRequestException
@@ -149,7 +149,9 @@ class ProductServiceTest {
         val userId = 1L
         val productReqDto = makeProductPostDto().copy(
             // Invalid start date (after end date))
-            startDate = LocalDateTime.now().plusDays(10)
+            startDate = LocalDateTime.now().plusDays(10),
+            endDate = LocalDateTime.now().plusDays(3)
+            
         )
 
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
@@ -197,8 +199,8 @@ class ProductServiceTest {
             title = "Test Product",
             description = "Test Description",
             startPrice = 1000,
-            startDate = LocalDateTime.now().plusDays(10),  // Invalid start date (after end date)
-            endDate = LocalDateTime.now().plusDays(3),
+            startDate = LocalDateTime.now().plusDays(10),
+            endDate = LocalDateTime.now().plusDays(13),
             category = Category.BOOKS
         )
     }
