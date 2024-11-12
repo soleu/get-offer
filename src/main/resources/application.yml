@@ -1,6 +1,9 @@
 spring:
   application:
     name: get-offer
+  batch:
+    jdbc:
+      initialize-schema: always
   data:
     web:
       pageable:
@@ -17,7 +20,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect

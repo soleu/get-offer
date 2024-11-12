@@ -2,6 +2,7 @@ package com.get_offer.product.repository
 
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductStatus
+import java.time.LocalDateTime
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.repository.JpaRepository
@@ -12,4 +13,6 @@ interface ProductRepository : JpaRepository<Product, Long> {
     fun findAllByWriterIdOrderByEndDateDesc(writerId: Long): List<Product>
 
     fun findAllByStatusInOrderByEndDateDesc(statuses: List<ProductStatus>, pageRequest: PageRequest): Page<Product>
+
+    fun findByStatusAndEndDateLessThanEqual(status: ProductStatus, endDate: LocalDateTime): List<Product>
 }
