@@ -6,6 +6,7 @@ import com.get_offer.auction.domain.AuctionResultRepository
 import com.get_offer.auction.domain.BidRepository
 import com.get_offer.product.domain.ProductRepository
 import com.get_offer.user.domain.UserRepository
+import java.math.BigDecimal
 import java.util.*
 import org.apache.coyote.BadRequestException
 import org.assertj.core.api.Assertions
@@ -127,7 +128,7 @@ class AuctionServiceTest {
         // given
         val userId = 1L
         val productId = 2L
-        val bidRequest = BidRequest(bidPrice = 200000)
+        val bidRequest = BidRequest(bidPrice = BigDecimal(200000))
 
         val product = TestFixtures.createProductInProgress(3L)
         `when`(mockProductRepository.findByIdWithLock(productId)).thenReturn(Optional.of(product))
@@ -136,7 +137,7 @@ class AuctionServiceTest {
         auctionService.bidAuction(userId, productId, bidRequest)
 
         // then
-        assertEquals(200000, product.currentPrice)
+        assertEquals(BigDecimal(200000), product.currentPrice)
     }
 
     @Test
@@ -144,10 +145,10 @@ class AuctionServiceTest {
         // given
         val userId = 1L
         val productId = 2L
-        val bidRequest = BidRequest(bidPrice = 90)
+        val bidRequest = BidRequest(bidPrice = BigDecimal(90))
 
         val product = TestFixtures.createProductInProgress(3L)
-        product.currentPrice = 100
+        product.currentPrice = BigDecimal(100)
 
         `when`(mockProductRepository.findByIdWithLock(productId)).thenReturn(Optional.of(product))
 
@@ -155,7 +156,7 @@ class AuctionServiceTest {
         val exception = assertThrows<BadRequestException> {
             auctionService.bidAuction(userId, productId, bidRequest)
         }
-        assertEquals("경매가가 경매 금액보다 낮을 수는 없습니다.", exception.message)
+        assertEquals("경매가가 경매 금액보다 낮거나 같을 수는 없습니다.", exception.message)
     }
 }
 

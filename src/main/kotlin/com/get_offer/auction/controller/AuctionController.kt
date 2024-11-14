@@ -57,8 +57,7 @@ class AuctionController(
         @AuthenticatedUser userId: Long,
         @PathVariable auctionId: Long,
         @RequestBody bidRequest: BidRequest
-    ): ApiResponse<Void> {
-        auctionService.bidAuction(userId, auctionId, bidRequest)
-        return ApiResponse.success(null)
+    ): ApiResponse<Boolean> {
+        return ApiResponse.success(auctionService.bidAuction(userId, auctionId, bidRequest))
     }
 }

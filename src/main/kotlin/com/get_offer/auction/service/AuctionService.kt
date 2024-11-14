@@ -57,7 +57,7 @@ class AuctionService(
     }
 
     @Transactional
-    fun bidAuction(userId: Long, productId: Long, bidRequest: BidRequest) {
+    fun bidAuction(userId: Long, productId: Long, bidRequest: BidRequest): Boolean {
         val product = productRepository.findByIdWithLock(productId)
             .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$productId 의 경매 내역은 존재하지 않습니다.") }
 
@@ -70,6 +70,7 @@ class AuctionService(
                 biddingPrice = bidRequest.bidPrice,
             )
         )
+        return true
     }
 
     private fun getAuctionAndProduct(auctionId: Long): Pair<AuctionResult, Product> {

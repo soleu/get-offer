@@ -5,6 +5,7 @@ import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.product.domain.WriterVo
 import com.get_offer.user.domain.User
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class ProductDetailDto(
@@ -14,8 +15,8 @@ data class ProductDetailDto(
     val category: Category,
     val images: List<String>,
     val description: String,
-    val startPrice: Int,
-    val currentPrice: Int,
+    val startPrice: BigDecimal,
+    val currentPrice: BigDecimal,
     val status: ProductStatus,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,

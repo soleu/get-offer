@@ -2,6 +2,7 @@ package com.get_offer.auction.service
 
 import com.get_offer.auction.controller.BidRequest
 import com.get_offer.product.domain.ProductRepository
+import java.math.BigDecimal
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import org.junit.jupiter.api.Assertions
@@ -23,14 +24,14 @@ class ConcurrencyTest(
 
         // thread 1
         val future1 = executorService.submit {
-            auctionService.bidAuction(2L, 1L, BidRequest(11000))
+            auctionService.bidAuction(2L, 1L, BidRequest(BigDecimal(11000)))
             latch.countDown()
         }
 
         // thread 2 - wait and execute
         val future2 = executorService.submit {
             latch.await() // countDown 할때까지 대기
-            auctionService.bidAuction(3L, 1L, BidRequest(12000))
+            auctionService.bidAuction(3L, 1L, BidRequest(BigDecimal(12000)))
         }
 
         // 스레드 완료 대기
@@ -38,6 +39,6 @@ class ConcurrencyTest(
         future2.get()
 
         val finalProduct = productRepository.findById(1L).get()
-        Assertions.assertEquals(12000, finalProduct.currentPrice)
+        Assertions.assertEquals(0, finalProduct.currentPrice.compareTo(BigDecimal("12000")))
     }
 }

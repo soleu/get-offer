@@ -1,5 +1,7 @@
 package com.get_offer.auction.controller
 
+import java.math.BigDecimal
+
 data class BidRequest(
-    val bidPrice: Int
+    val bidPrice: BigDecimal
 )

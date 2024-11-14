@@ -10,6 +10,7 @@ import com.get_offer.product.domain.ProductRepository
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.user.domain.User
 import com.get_offer.user.domain.UserRepository
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
 import org.apache.coyote.BadRequestException
@@ -130,7 +131,7 @@ class ProductServiceTest {
         // given
         val userId = 1L
         val productReqDto = makeProductPostDto().copy(
-            startPrice = -1000,  // Invalid start price
+            startPrice = BigDecimal(-1000),  // Invalid start price
         )
 
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
@@ -177,7 +178,7 @@ class ProductServiceTest {
         )
         val existingProduct = Product(
             writerId, "old Title", Category.BOOKS, images = ProductImagesVo(listOf("images.png")),
-            "old description", 1000, 1000, ProductStatus.WAIT,
+            "old description", BigDecimal(1000), BigDecimal(1000), ProductStatus.WAIT,
             LocalDateTime.now(),
             LocalDateTime.now(),
             productId,
@@ -198,7 +199,7 @@ class ProductServiceTest {
         return ProductPostReqDto(
             title = "Test Product",
             description = "Test Description",
-            startPrice = 1000,
+            startPrice = BigDecimal(1000),
             startDate = LocalDateTime.now().plusDays(10),
             endDate = LocalDateTime.now().plusDays(13),
             category = Category.BOOKS
