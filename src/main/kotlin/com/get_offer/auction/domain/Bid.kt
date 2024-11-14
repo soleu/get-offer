@@ -16,10 +16,11 @@ class Bid(
 
     val bidderId: Long,
 
-    val biddingPrice: BigDecimal,
+    val bidPrice: BigDecimal,
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0L
 
 ) : AuditingTimeEntity() {
     init {
@@ -27,12 +28,12 @@ class Bid(
     }
 
     private fun validateBid() {
-        if (biddingPrice <= BigDecimal.ZERO) {
+        if (bidPrice <= BigDecimal.ZERO) {
             throw BadRequestException("경매가는 0보다 커야합니다.")
         }
 
         val minBidPrice = BigDecimal("100")
-        if (biddingPrice < minBidPrice) {
+        if (bidPrice < minBidPrice) {
             throw BadRequestException("경매가는 최소 ${minBidPrice}원 이상이어야 합니다.")
         }
     }

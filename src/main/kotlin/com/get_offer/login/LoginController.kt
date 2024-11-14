@@ -22,7 +22,7 @@ class LoginController(
     private val loginService: LoginService,
 ) {
 
-    @GetMapping("/oauth_login")
+    @GetMapping("/oauthLogin")
     fun getLoginPage(model: Model): String {
         val authorizationRequestBaseUri = "oauth2/authorization"
         val oauth2AuthenticationUrls: MutableMap<String, String> = HashMap()
@@ -40,7 +40,7 @@ class LoginController(
 
         model.addAttribute("urls", oauth2AuthenticationUrls)
 
-        return "oauth_login"
+        return "oauthLogin"
     }
 
     @GetMapping("/loginSuccess")

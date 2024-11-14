@@ -1,6 +1,6 @@
 package com.get_offer.product.service
 
-import com.get_offer.common.exception.CustomException
+import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.common.multipart.ImageService
 import com.get_offer.product.controller.ProductPostReqDto
@@ -34,10 +34,10 @@ class ProductService(
 
     fun getProductDetail(id: Long, userId: Long): ProductDetailDto {
         val product = productRepository.findById(id)
-            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$id 의 상품은 존재하지 않습니다.") }
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$id 의 상품은 존재하지 않습니다.") }
 
         val writer =
-            userRepository.findById(id).orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$id 의 사용자는 존재하지 않습니다.") }
+            userRepository.findById(id).orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$id 의 사용자는 존재하지 않습니다.") }
 
         return ProductDetailDto.of(product, writer, userId)
     }
@@ -65,10 +65,10 @@ class ProductService(
     @Transactional
     fun editProduct(req: ProductEditDto): ProductSaveDto {
         val product = productRepository.findById(req.productId)
-            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "${req.productId} 의 상품은 존재하지 않습니다.") }
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "${req.productId} 의 상품은 존재하지 않습니다.") }
         // access
         if (product.writerId != req.writerId) {
-            throw CustomException(ExceptionCode.UN_AUTHORIZED)
+            throw ApiException(ExceptionCode.UN_AUTHORIZED)
         }
 
         if (product.status != ProductStatus.WAIT) {
@@ -80,7 +80,7 @@ class ProductService(
             imageService.saveImages(req.images)
         } else null
 
-        product.updateNonNullFields(ProductEditReq.of(req, imageUrls))
+        product.update(ProductEditReq.of(req, imageUrls))
 
         return ProductSaveDto.of(product)
     }

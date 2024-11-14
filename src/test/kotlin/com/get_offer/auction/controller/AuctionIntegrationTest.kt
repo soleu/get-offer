@@ -67,7 +67,7 @@ class AuctionIntegrationTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value("nintendo"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].category").value("GAMES"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].thumbnail").value("https://picsum.photos/200/300"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].finalPrice").value("10000"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].finalPrice").value(10000.0))
     }
 
     @Test

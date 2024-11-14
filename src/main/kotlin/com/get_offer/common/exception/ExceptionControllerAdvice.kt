@@ -20,7 +20,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler
-    fun handleCustomException(ex: CustomException): ResponseEntity<ApiResponse<Any>> {
+    fun handleApiException(ex: ApiException): ResponseEntity<ApiResponse<Any>> {
         return ResponseEntity.status(ex.code.httpStatus).body(ApiResponse.error(ex.code.message))
     }
 }

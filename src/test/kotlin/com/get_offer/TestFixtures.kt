@@ -60,7 +60,7 @@ object TestFixtures {
         return AuctionResult(
             productId = 1L,
             buyerId = buyerId ?: 1L,
-            finalPrice = 15500,
+            finalPrice = BigDecimal(15500),
             auctionStatus = AuctionStatus.COMPLETED,
         )
     }

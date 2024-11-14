@@ -55,11 +55,11 @@ class OAuth2LoginConfig(
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(AntPathRequestMatcher("/h2-console/**")).permitAll()
-                    .requestMatchers("/oauth_login", "/loginSuccess").permitAll()
+                    .requestMatchers("/oauthLogin", "/loginSuccess").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login {
-                it.loginPage("/oauth_login")
+                it.loginPage("/oauthLogin")
                 it.defaultSuccessUrl("/loginSuccess", true)
             }
             .addFilterBefore(

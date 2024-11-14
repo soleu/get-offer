@@ -65,7 +65,7 @@ class Product(
         this.currentPrice = bidPrice
     }
 
-    fun updateNonNullFields(newProductReq: ProductEditReq) {
+    fun update(newProductReq: ProductEditReq) {
         newProductReq.startDate?.let { this.startDate = it }
         newProductReq.endDate?.let { this.endDate = it }
         newProductReq.title?.let { this.title = it }

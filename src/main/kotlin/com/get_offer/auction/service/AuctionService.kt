@@ -5,7 +5,7 @@ import com.get_offer.auction.domain.AuctionResult
 import com.get_offer.auction.domain.AuctionResultRepository
 import com.get_offer.auction.domain.Bid
 import com.get_offer.auction.domain.BidRepository
-import com.get_offer.common.exception.CustomException
+import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductRepository
@@ -33,14 +33,14 @@ class AuctionService(
         // 해당 상품 정보를 찾음
         return auctionResults.map {
             val product = productRepository.findById(it.productId)
-                .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "${it.productId} 의 상품은 존재하지 않습니다.") }
+                .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "${it.productId} 의 상품은 존재하지 않습니다.") }
             BuyAuctionDto.of(it, product)
         }
     }
 
     fun getSoldAuctionDetail(userId: Long, auctionId: Long): SellAuctionDetailDto {
         val (auction, product) = getAuctionAndProduct(auctionId)
-        if (userId != product.writerId) throw CustomException(ExceptionCode.UN_AUTHORIZED)
+        if (userId != product.writerId) throw ApiException(ExceptionCode.UN_AUTHORIZED)
 
         val buyer = getUser(auction.buyerId)
 
@@ -49,7 +49,7 @@ class AuctionService(
 
     fun getBoughtAuctionDetail(userId: Long, auctionId: Long): BuyAuctionDetailDto {
         val (auction, product) = getAuctionAndProduct(auctionId)
-        if (userId != auction.buyerId) throw CustomException(ExceptionCode.UN_AUTHORIZED)
+        if (userId != auction.buyerId) throw ApiException(ExceptionCode.UN_AUTHORIZED)
 
         val seller = getUser(product.writerId)
 
@@ -59,7 +59,7 @@ class AuctionService(
     @Transactional
     fun bidAuction(userId: Long, productId: Long, bidRequest: BidRequest): Boolean {
         val product = productRepository.findByIdWithLock(productId)
-            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$productId 의 경매 내역은 존재하지 않습니다.") }
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$productId 의 경매 내역은 존재하지 않습니다.") }
 
         product.placeBid(bidRequest.bidPrice, userId)
 
@@ -67,7 +67,7 @@ class AuctionService(
             Bid(
                 productId = product.id,
                 bidderId = userId,
-                biddingPrice = bidRequest.bidPrice,
+                bidPrice = bidRequest.bidPrice,
             )
         )
         return true
@@ -75,16 +75,16 @@ class AuctionService(
 
     private fun getAuctionAndProduct(auctionId: Long): Pair<AuctionResult, Product> {
         val auction = auctionRepository.findById(auctionId)
-            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$auctionId 의 경매 내역은 존재하지 않습니다.") }
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$auctionId 의 경매 내역은 존재하지 않습니다.") }
 
         val product = productRepository.findById(auction.productId)
-            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "${auction.productId} 의 상품은 존재하지 않습니다.") }
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "${auction.productId} 의 상품은 존재하지 않습니다.") }
 
         return Pair(auction, product)
     }
 
     private fun getUser(userId: Long): User {
         return userRepository.findById(userId)
-            .orElseThrow { CustomException(ExceptionCode.NOTFOUND, "$userId 의 사용자는 존재하지 않습니다.") }
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$userId 의 사용자는 존재하지 않습니다.") }
     }
 }
