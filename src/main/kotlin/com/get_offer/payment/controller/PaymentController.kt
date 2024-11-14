@@ -1,6 +1,7 @@
 package com.get_offer.payment.controller
 
 import ApiResponse
+import com.get_offer.login.AuthenticatedUser
 import com.get_offer.payment.service.PaymentService
 import com.get_offer.payment.service.SavePaymentReq
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +23,7 @@ class PaymentController(
      */
     @PostMapping("/checkout")
     fun checkout(
-        @RequestParam userId: Long,
+        @AuthenticatedUser userId: Long,
         @RequestParam orderId: Long,
     ): String {
         return paymentService.checkout(userId, orderId)
@@ -33,7 +34,7 @@ class PaymentController(
      */
     @PostMapping("/save")
     fun savePayment(
-        @RequestParam userId: Long, @RequestBody req: SavePaymentReqDto
+        @AuthenticatedUser userId: Long, @RequestBody req: SavePaymentReqDto
     ): ApiResponse<Boolean> {
         return ApiResponse.success(paymentService.savePayment(SavePaymentReq.of(req, userId)))
     }
