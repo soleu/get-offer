@@ -1,13 +1,19 @@
 package com.get_offer.auction.service
 
 import com.get_offer.TestFixtures
-import com.get_offer.auction.controller.repository.AuctionResultRepository
-import com.get_offer.product.repository.ProductRepository
+import com.get_offer.auction.controller.BidRequest
+import com.get_offer.auction.domain.AuctionResultRepository
+import com.get_offer.auction.domain.BidRepository
+import com.get_offer.product.domain.ProductRepository
 import com.get_offer.user.domain.UserRepository
+import java.math.BigDecimal
 import java.util.*
+import org.apache.coyote.BadRequestException
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.any
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
@@ -17,13 +23,16 @@ class AuctionServiceTest {
     private lateinit var mockProductRepository: ProductRepository
     private lateinit var mockAuctionRepository: AuctionResultRepository
     private lateinit var mockUserRepository: UserRepository
+    private lateinit var mockBidRepository: BidRepository
 
     @BeforeEach
     fun setUp() {
         mockProductRepository = mock(ProductRepository::class.java)
         mockAuctionRepository = mock(AuctionResultRepository::class.java)
         mockUserRepository = mock(UserRepository::class.java)
-        auctionService = AuctionService(mockProductRepository, mockAuctionRepository, mockUserRepository)
+        mockBidRepository = mock(BidRepository::class.java)
+        auctionService =
+            AuctionService(mockProductRepository, mockAuctionRepository, mockBidRepository, mockUserRepository)
     }
 
     @Test
@@ -112,6 +121,42 @@ class AuctionServiceTest {
         Assertions.assertThat(result.auctionStatus).isEqualTo(givenAuction.auctionStatus)
         Assertions.assertThat(result.product.name).isEqualTo(givenProduct.title)
         Assertions.assertThat(result.seller.nickname).isEqualTo(givenBuyer.nickname)
+    }
+
+    @Test
+    fun bidSuccess() {
+        // given
+        val userId = 1L
+        val productId = 2L
+        val bidRequest = BidRequest(bidPrice = BigDecimal(200000))
+
+        val product = TestFixtures.createProductInProgress(3L)
+        `when`(mockProductRepository.findByIdWithLock(productId)).thenReturn(Optional.of(product))
+
+        // when
+        auctionService.bidAuction(userId, productId, bidRequest)
+
+        // then
+        assertEquals(BigDecimal(200000), product.currentPrice)
+    }
+
+    @Test
+    fun bidLessThenCurPriceThrowsExp() {
+        // given
+        val userId = 1L
+        val productId = 2L
+        val bidRequest = BidRequest(bidPrice = BigDecimal(90))
+
+        val product = TestFixtures.createProductInProgress(3L)
+        product.currentPrice = BigDecimal(100)
+
+        `when`(mockProductRepository.findByIdWithLock(productId)).thenReturn(Optional.of(product))
+
+        // when & then
+        val exception = assertThrows<BadRequestException> {
+            auctionService.bidAuction(userId, productId, bidRequest)
+        }
+        assertEquals("경매가가 경매 금액보다 낮거나 같을 수는 없습니다.", exception.message)
     }
 }
 
