@@ -3,6 +3,7 @@ package com.get_offer.auction.service
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductStatus
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class AuctionProductUnitDto(
@@ -11,7 +12,7 @@ data class AuctionProductUnitDto(
     val name: String,
     val category: Category,
     val thumbnail: String,
-    val currentPrice: Int,
+    val currentPrice: BigDecimal,
     val status: ProductStatus,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,

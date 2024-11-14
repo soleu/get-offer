@@ -1,6 +1,7 @@
 package com.get_offer.product.domain
 
 import com.get_offer.product.service.ProductEditDto
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class ProductEditReq(
@@ -8,7 +9,7 @@ data class ProductEditReq(
     val title: String?,
     val category: Category?,
     val description: String?,
-    val startPrice: Int?,
+    val startPrice: BigDecimal?,
     val startDate: LocalDateTime?,
     val endDate: LocalDateTime?,
     val writerId: Long,

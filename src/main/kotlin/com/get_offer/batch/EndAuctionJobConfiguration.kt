@@ -1,11 +1,13 @@
 package com.get_offer.batch
 
-import com.get_offer.auction.controller.repository.AuctionResultRepository
-import com.get_offer.auction.controller.repository.BidRepository
+
 import com.get_offer.auction.domain.AuctionResult
+import com.get_offer.auction.domain.AuctionResultRepository
 import com.get_offer.auction.domain.AuctionStatus
+import com.get_offer.auction.domain.BidRepository
+import com.get_offer.product.domain.ProductRepository
 import com.get_offer.product.domain.ProductStatus
-import com.get_offer.product.repository.ProductRepository
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
@@ -60,7 +62,7 @@ class EndAuctionJobConfiguration(
                         AuctionResult(
                             productId = product.id,
                             buyerId = 0L,
-                            finalPrice = 0,
+                            finalPrice = BigDecimal(0),
                             auctionStatus = AuctionStatus.FAILED,
                         )
                     } else {

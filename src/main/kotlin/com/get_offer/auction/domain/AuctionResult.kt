@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "AUCTION_RESULTS")
@@ -19,7 +20,7 @@ class AuctionResult(
 
     val buyerId: Long = 0L,
 
-    val finalPrice: Int,
+    val finalPrice: BigDecimal,
 
     @Enumerated(EnumType.STRING)
     val auctionStatus: AuctionStatus,
