@@ -24,7 +24,7 @@ class AuctionResult(
     val finalPrice: Int,
 
     @Enumerated(EnumType.STRING)
-    val auctionStatus: AuctionStatus,
+    var auctionStatus: AuctionStatus,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.get_offer.payment.service
 
 import com.get_offer.auction.controller.repository.AuctionResultRepository
+import com.get_offer.auction.domain.AuctionStatus
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.payment.Payment
@@ -9,6 +10,7 @@ import com.get_offer.payment.domain.PaymentRepository
 import com.get_offer.user.domain.UserRepository
 import org.apache.coyote.BadRequestException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PaymentService(
@@ -39,6 +41,7 @@ class PaymentService(
         )
     }
 
+    @Transactional
     fun savePayment(req: SavePaymentReq): Boolean {
         val order = auctionRepository.findById(req.orderId.toLong())
             .orElseThrow()
@@ -54,6 +57,8 @@ class PaymentService(
                 paymentId = req.paymentKey,
             )
         )
+
+        order.auctionStatus = AuctionStatus.COMPLETED
         return true
     }
 }
