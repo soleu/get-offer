@@ -4,6 +4,7 @@ import com.get_offer.auction.domain.AuctionResult
 import com.get_offer.auction.domain.AuctionStatus
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class BuyAuctionDto(
@@ -14,7 +15,7 @@ data class BuyAuctionDto(
     val title: String,
     val category: Category,
     val thumbnail: String,
-    val finalPrice: Int,
+    val finalPrice: BigDecimal,
     val actionStatus: AuctionStatus,
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,

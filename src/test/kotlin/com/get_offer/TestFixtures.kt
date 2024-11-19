@@ -7,6 +7,7 @@ import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductStatus
 import com.get_offer.user.domain.User
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 object TestFixtures {
@@ -17,8 +18,8 @@ object TestFixtures {
             Category.GAMES,
             ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
             "desc for product",
-            10000,
-            15000,
+            BigDecimal(10000),
+            BigDecimal(15000),
             ProductStatus.IN_PROGRESS,
             LocalDateTime.now(),
             LocalDateTime.now()
@@ -32,8 +33,8 @@ object TestFixtures {
             Category.SPORTS,
             ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
             "desc for product",
-            12000,
-            15500,
+            BigDecimal(12000),
+            BigDecimal(15500),
             ProductStatus.WAIT,
             LocalDateTime.now(),
             LocalDateTime.now()
@@ -47,8 +48,8 @@ object TestFixtures {
             Category.SPORTS,
             ProductImagesVo(listOf("https://image1.png", "https://image2.png")),
             "desc for product",
-            13000,
-            16500,
+            BigDecimal(13000),
+            BigDecimal(16500),
             ProductStatus.COMPLETED,
             LocalDateTime.now(),
             LocalDateTime.now()
@@ -59,7 +60,7 @@ object TestFixtures {
         return AuctionResult(
             productId = 1L,
             buyerId = buyerId ?: 1L,
-            finalPrice = 15500,
+            finalPrice = BigDecimal(15500),
             auctionStatus = AuctionStatus.COMPLETED,
             auctionName = "product1"
         )

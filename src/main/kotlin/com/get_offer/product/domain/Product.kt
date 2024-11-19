@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import org.apache.coyote.BadRequestException
@@ -30,9 +31,9 @@ class Product(
 
     var description: String,
 
-    var startPrice: Int,
+    var startPrice: BigDecimal,
 
-    var currentPrice: Int,
+    var currentPrice: BigDecimal,
 
     @Enumerated(EnumType.STRING)
     var status: ProductStatus,
@@ -49,6 +50,21 @@ class Product(
         validateProduct(startPrice, startDate, endDate)
     }
 
+    fun placeBid(bidPrice: BigDecimal, userId: Long) {
+        if (writerId == userId) {
+            throw BadRequestException("판매자가 경매를 할수는 없습니다.")
+        }
+        if (currentPrice >= bidPrice) {
+            throw BadRequestException("경매가가 경매 금액보다 낮거나 같을 수는 없습니다.")
+        }
+
+        if (status != ProductStatus.IN_PROGRESS) {
+            throw BadRequestException("진행중인 경매만 입찰을 할 수 있습니다.")
+        }
+
+        this.currentPrice = bidPrice
+    }
+
     fun update(newProductReq: ProductEditReq) {
         newProductReq.startDate?.let { this.startDate = it }
         newProductReq.endDate?.let { this.endDate = it }
@@ -59,13 +75,13 @@ class Product(
     }
 
 
-    private fun validateProduct(startPrice: Int, startDate: LocalDateTime, endDate: LocalDateTime) {
+    private fun validateProduct(startPrice: BigDecimal, startDate: LocalDateTime, endDate: LocalDateTime) {
         validateStartPrice(startPrice)
         validateDateRange(startDate, endDate)
     }
 
-    private fun validateStartPrice(startPrice: Int) {
-        if (startPrice < 0) {
+    private fun validateStartPrice(startPrice: BigDecimal) {
+        if (startPrice < BigDecimal.ZERO) {
             throw BadRequestException("startPrice가 0보다 작을 수 없습니다.")
         }
     }

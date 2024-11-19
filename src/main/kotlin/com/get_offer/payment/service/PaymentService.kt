@@ -1,6 +1,6 @@
 package com.get_offer.payment.service
 
-import com.get_offer.auction.controller.repository.AuctionResultRepository
+import com.get_offer.auction.domain.AuctionResultRepository
 import com.get_offer.auction.domain.AuctionStatus
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode

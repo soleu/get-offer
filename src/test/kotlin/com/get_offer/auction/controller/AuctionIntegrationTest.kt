@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -66,7 +67,7 @@ class AuctionIntegrationTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value("nintendo"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].category").value("GAMES"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].thumbnail").value("https://picsum.photos/200/300"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].finalPrice").value("10000"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].finalPrice").value(10000.0))
     }
 
     @Test
@@ -95,5 +96,21 @@ class AuctionIntegrationTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.product.name").value("nintendo"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.seller.id").value("1"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.seller.nickname").value("test"))
+    }
+
+    @Test
+    fun bidAuction() {
+        val bidRequest = """
+            {
+                "bidPrice" : 200000
+            }
+        """.trimIndent()
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/auctions/1/bid")
+                .header("Authorization", tokenUser2)
+                .content(bidRequest)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk)
     }
 }
