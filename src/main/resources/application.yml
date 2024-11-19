@@ -61,4 +61,4 @@ jasypt:
     pool-size: 2    # 암호화 요청을 담을 pool 크기 설정 (2 권장)
     string-output-type: base64    # 암호화 이후 받을 타입
     key-obtention-iterations: 1000    # 암호화를 수행할 반복할 해시 횟수
-    password: ${JASYPT-KEY}
+    password: ${JASYPT_KEY}
