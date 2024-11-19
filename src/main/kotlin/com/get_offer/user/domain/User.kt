@@ -16,6 +16,8 @@ class User(
 
     val email: String = "",
 
+    val phone: String = "",
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,

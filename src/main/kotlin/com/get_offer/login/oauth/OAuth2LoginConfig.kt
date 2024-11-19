@@ -25,6 +25,8 @@ class OAuth2LoginConfig(
     private val clientId: String,
     @Value("\${spring.security.oauth2.client.registration.google-login.client-secret}")
     private val clientSecret: String,
+    @Value("\${spring.baseurl}")
+    private val baseUrl: String,
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
 ) {
     @Bean
@@ -33,7 +35,6 @@ class OAuth2LoginConfig(
     }
 
     private fun googleClientRegistration(): ClientRegistration {
-        val baseUrl = "http://localhost:8080"
         val registrationId = "google"
         return ClientRegistration.withRegistrationId("google").clientId(clientId).clientSecret(clientSecret)
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
@@ -55,7 +56,7 @@ class OAuth2LoginConfig(
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(AntPathRequestMatcher("/h2-console/**")).permitAll()
-                    .requestMatchers("/oauthLogin", "/loginSuccess").permitAll()
+                    .requestMatchers("/oauthLogin", "/loginSuccess", "/health").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login {

@@ -18,12 +18,14 @@ class AuctionResult(
     @Column(unique = true)
     val productId: Long,
 
+    val auctionName: String,
+
     val buyerId: Long = 0L,
 
     val finalPrice: BigDecimal,
 
     @Enumerated(EnumType.STRING)
-    val auctionStatus: AuctionStatus,
+    var auctionStatus: AuctionStatus,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

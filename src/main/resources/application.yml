@@ -1,6 +1,13 @@
+jwt:
+  key: ENC(ZzvlIBZACSgX2bbuLlAG4Zf0Dz3XbTgrcUvunXS+jOC4aJdEfvXMqbLwjdHYX6Z3y9cyH0Y/FZc=)
+  access-token-expiration: 3600000
 spring:
   application:
     name: get-offer
+  baseurl: ENC(Hfr385kYpf0UVqqBfAe29hrGl4MBjgfa7YXfKg48uYw=)
+  batch:
+    jdbc:
+      initialize-schema: always
   data:
     web:
       pageable:
@@ -17,15 +24,41 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         show_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google-login:
+            client-id: ENC(tT2CCKyXMyHpQZVB3ON7HtxsCM+txxu85WykpgizKtEU2/nLH2k9Jn1pwrgCKEk0wvkjjXWJGRMgRR0bejMm0kWkAJXfmMNqzXhimcU54/k/gUbTtP62vw==)
+            client-secret: ENC(iQZE+/qYeBtVAqXf7hD0aMzczd2OZtMwoVTZvj6Gax9deHOk7rlWpAADJQkxhwEf)
 aws:
   s3:
     bucket: get-offer-bucket
-  stack:
-    auto: false
   credentials:
+    accessKey: ENC(r8QFlZMXKyJ5gyh1HgPGqqi4EUAjFVYt4hbdOB77tec=)
+    secretKey: ENC(LiTqU49q2gTMW/NI6lBAQzvTSi+4+s/MQ/ekSafhTd/bsgckxtbQ6qGaZsyFm27NTQKXgQZBKpY=)
+    feign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
+toss:
+  payments:
+    client_key: ENC(aTH+vO+ahFlb9JpWtCJ5+2IZT0v6wszC8sCfx3Yt7OeHObakFMzcNvLAQ4317wZ+)
+    secret_key: ENC(I8eNggZN2g5HsiVWFbkoaksfkFYPm+OoWSxgF/tqXeWGopTscFJnwG/4Z5smM5cw)
+    scriptUrl: ENC(nrDOo99pYxOccKWNSKQY2fJe9fjo0+hdd/Ql1HtFHaE0cfRsBCCQqUnNChM7nang)
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor   # java 빈 이름
+    algorithm: PBEWithMD5AndDES   # 사용 알고리즘
+    pool-size: 2    # 암호화 요청을 담을 pool 크기 설정 (2 권장)
+    string-output-type: base64    # 암호화 이후 받을 타입
+    key-obtention-iterations: 1000    # 암호화를 수행할 반복할 해시 횟수
+    password: ${JASYPT-KEY}

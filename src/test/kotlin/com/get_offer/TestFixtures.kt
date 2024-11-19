@@ -62,6 +62,7 @@ object TestFixtures {
             buyerId = buyerId ?: 1L,
             finalPrice = BigDecimal(15500),
             auctionStatus = AuctionStatus.COMPLETED,
+            auctionName = "product1"
         )
     }
 
