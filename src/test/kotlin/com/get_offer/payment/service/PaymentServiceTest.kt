@@ -1,11 +1,12 @@
 package com.get_offer.payment.service
 
-import com.get_offer.auction.controller.repository.AuctionResultRepository
 import com.get_offer.auction.domain.AuctionResult
+import com.get_offer.auction.domain.AuctionResultRepository
 import com.get_offer.auction.domain.AuctionStatus
 import com.get_offer.payment.Payment
 import com.get_offer.payment.domain.PaymentRepository
 import com.get_offer.user.domain.UserRepository
+import java.math.BigDecimal
 import java.util.*
 import org.apache.coyote.BadRequestException
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -41,7 +42,7 @@ class PaymentServiceTest {
         val userId = 2L
         val productId = 1L
         val paymentKey = "paymentKey123"
-        val amount = 5000
+        val amount = BigDecimal(5000)
 
         val order = AuctionResult(
             id = orderId,
@@ -83,8 +84,8 @@ class PaymentServiceTest {
         val userId = 2L
         val productId = 1L
         val paymentKey = "paymentKey123"
-        val invalidAmount = 3000 // invalid amount
-        val amount = 10000
+        val invalidAmount = BigDecimal(3000) // invalid amount
+        val amount = BigDecimal(10000)
 
         val order = AuctionResult(
             id = orderId,
