@@ -60,12 +60,6 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
 compileKotlin {
     kotlinOptions {
         jvmTarget = "17"
