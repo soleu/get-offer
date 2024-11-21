@@ -59,6 +59,11 @@ kotlin {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+kotlin {
+    jvmToolchain(17)
+}
+
 compileKotlin {
     kotlinOptions {
         jvmTarget = "17"
