@@ -25,9 +25,9 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "${environment.JASYPT_KEY}"
-                echo "${env.JASYPT_KEY}"
-                sh 'JASYPT_KEY=${environment.JASYPT_KEY} ./gradlew clean build'
+                withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'JASYPT_KEY', keyFileVariable: 'JASYPT_KEY_VAR')]) {
+                    sh 'JASYPT_KEY=$JASYPT_KEY_VAR ./gradlew clean build'
+                }
             }
 
             post {
