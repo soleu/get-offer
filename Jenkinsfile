@@ -3,6 +3,7 @@ pipeline {
     environment {
         API_ACCESS_KEY = credentials('ncp-api-access-key')
         API_SECRET_KEY = credentials('ncp-api-secret-key')
+        JASYPT_KEY = credentials('JASYPT_KEY')
     }
 
     stages {
@@ -24,7 +25,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean build'
+                sh 'JASYPT_KEY=${environment.JASYPT_KEY} ./gradlew clean build'
             }
 
             post {
