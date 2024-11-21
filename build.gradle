@@ -9,11 +9,6 @@ plugins {
 group = 'com'
 version = '0.0.1-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
 
 configurations {
     compileOnly {
@@ -51,22 +46,9 @@ dependencies {
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll '-Xjsr305=strict'
-    }
+    jvmToolchain(17)
 }
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
