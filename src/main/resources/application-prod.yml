@@ -1,2 +1,7 @@
 spring:
   baseurl: ENC(RvvyKVpGaJkD+BDTB5qbbPwj1pZcWg+KsCTqXCJG69M/3dRUllfwTg==)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"

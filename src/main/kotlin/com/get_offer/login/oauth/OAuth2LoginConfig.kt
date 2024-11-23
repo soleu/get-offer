@@ -56,7 +56,7 @@ class OAuth2LoginConfig(
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(AntPathRequestMatcher("/h2-console/**")).permitAll()
-                    .requestMatchers("/oauthLogin", "/loginSuccess", "/health").permitAll()
+                    .requestMatchers("/oauthLogin", "/loginSuccess", "/health", "/actuator").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login {
