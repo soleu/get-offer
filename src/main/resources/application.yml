@@ -54,6 +54,11 @@ toss:
     client_key: ENC(aTH+vO+ahFlb9JpWtCJ5+2IZT0v6wszC8sCfx3Yt7OeHObakFMzcNvLAQ4317wZ+)
     secret_key: ENC(I8eNggZN2g5HsiVWFbkoaksfkFYPm+OoWSxgF/tqXeWGopTscFJnwG/4Z5smM5cw)
     scriptUrl: ENC(nrDOo99pYxOccKWNSKQY2fJe9fjo0+hdd/Ql1HtFHaE0cfRsBCCQqUnNChM7nang)
+naver-cloud:
+  app-id: ENC(lhyMKQqDYMmWhgL6wcPIg36clE+a/EstWVmkAoukl7CCsEoKAWdiFOFa/t7o8NiQ)
+  api-key: ENC(yEWlhxjia9DeeRT2joe8QKqpZafZhhHqah/gTWNLj68007GQfOxXXpXRQzr2Q1VdT9OydALoBL7vhFPUSjkssYg06Y5KyVXCrnAWkyCX2vA=)
+  gw-api-key: ENC(UsY3TNRdE00GZjWNsBQdJbvowOxWudkR6Cohvww4X8QaWiltGKIOVTgVkZEVOexi9d4F94fEnVU=)
+  base-url: ENC(SUA7uBRMyzXHm2O9Tlx2oqZyIM2Zf3gsCGlXdd3qyhFvgApyKae36kvV1/Wi2o+c)
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor   # java 빈 이름
