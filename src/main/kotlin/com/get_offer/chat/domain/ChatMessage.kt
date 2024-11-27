@@ -18,7 +18,7 @@ class ChatMessage(
 
     val timestamp: LocalDateTime = LocalDateTime.now(),
 
-    val image: String,
+    val type: String = "TEXT",
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,7 +8,6 @@ data class ChatMessageDto(
     val senderId: Long,
     val content: String,
     val timestamp: LocalDateTime,
-    val image: String,
     val id: Long
 ) {
     companion object {
@@ -18,7 +17,6 @@ data class ChatMessageDto(
                 message.senderId,
                 message.content,
                 message.timestamp,
-                message.image,
                 message.id,
             )
         }
