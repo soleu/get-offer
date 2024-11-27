@@ -6,6 +6,7 @@ import com.get_offer.chat.domain.ChatRoomRepository
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.product.domain.ProductRepository
+import org.apache.coyote.BadRequestException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,9 +21,11 @@ class ChatRoomService(
         // 기존 채팅방 여부 확인
         val existingRoom = chatRoomRepository.findByRequesterIdAndProductId(requesterId, productId)
         if (existingRoom != null) return ChatRoomDto(existingRoom.id)
-        // TODO : 본인과 대화할 수 없음
+
         // 새 채팅방 생성
         val sellerId = getSellerIdFromProductId(productId)
+
+        if (sellerId == requesterId) throw BadRequestException("채팅 상대방이 본인일 수 없습니다.")
         val chatRoom =
             chatRoomRepository.save(ChatRoom(requesterId = requesterId, sellerId = sellerId, productId = productId))
         return ChatRoomDto(chatRoom.id)

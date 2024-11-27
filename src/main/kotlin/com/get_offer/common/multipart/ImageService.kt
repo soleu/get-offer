@@ -12,6 +12,10 @@ class ImageService(
         return s3FileManagement.uploadImages(images)
     }
 
+    fun saveByteImage(imageBytes: ByteArray, fileName: String): String {
+        return s3FileManagement.updateByteImage(imageBytes, fileName)
+    }
+
     fun deleteImages(imageUrls: List<String>) {
         s3FileManagement.delete(imageUrls)
     }

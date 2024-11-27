@@ -53,6 +53,11 @@
             align-self: flex-start;
         }
 
+        .chat-messages img {
+            max-width: 200px;
+            border-radius: 10px;
+        }
+
         .chat-footer {
             display: flex;
             align-items: center;
@@ -80,6 +85,10 @@
         .chat-footer button:hover {
             background: #45A049;
         }
+
+        #fileInput {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +99,8 @@
     <div class="chat-messages" id="chatMessages">
     </div>
     <div class="chat-footer">
+        <button onclick="document.getElementById('fileInput').click()">+</button>
+        <input accept="image/*" id="fileInput" onchange="sendImage(this.files[0])" type="file">
         <input id="messageInput" placeholder="Type a message..." type="text">
         <button onclick="sendMessage()">Send</button>
     </div>
@@ -121,10 +132,20 @@
     function displayMessage(chatMessage) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message');
-        messageDiv.classList.add(chatMessage.senderId == userId ? 'sender' : 'receiver');
-        messageDiv.textContent = chatMessage.content;
+        messageDiv.classList.add(chatMessage.senderId === userId ? 'sender' : 'receiver');
+
+        if (chatMessage.type === 'IMAGE') {
+            const imgElement = document.createElement('img');
+            imgElement.src = chatMessage.content;
+            imgElement.style.maxWidth = '200px';
+            imgElement.style.borderRadius = '10px';
+            messageDiv.appendChild(imgElement);
+        } else {
+            messageDiv.textContent = chatMessage.content;
+        }
+
         chatMessagesDiv.appendChild(messageDiv);
-        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // 스크롤 하단으로 이동
+        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
     }
 
     // 3. WebSocket 연결
@@ -151,6 +172,25 @@
         }));
 
         messageInput.value = ''; // 입력 필드 초기화
+    }
+
+    // 5. 이미지 전송
+    function sendImage(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const base64Image = event.target.result.split(',')[1]; // Base64 인코딩된 이미지 데이터
+
+            stompClient.send(`/app/chat/${roomId}/send`, {}, JSON.stringify({
+                senderId: userId,
+                type: 'IMAGE',
+                content: base64Image // Base64 데이터 전송
+            }));
+        };
+
+        reader.onerror = function (error) {
+            console.error('Error reading file:', error);
+        }
+        reader.readAsDataURL(file); // 파일 읽기
     }
 
     // 초기화: 과거 메시지 불러오기 후 WebSocket 연결

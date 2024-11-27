@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
@@ -38,7 +39,21 @@ class S3FileManagement(
             .build()
 
         amazonS3.putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.bytes))
-        return fileName
+        return getUrl(fileName)
+    }
+
+
+    fun updateByteImage(imageBytes: ByteArray, fileName: String): String {
+        val putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucket)
+            .key(fileName)
+            .contentType("image/png")
+            .contentLength(imageBytes.size.toLong())
+            .build()
+
+        amazonS3.putObject(putObjectRequest, RequestBody.fromBytes(imageBytes))
+
+        return getUrl(fileName)
     }
 
     fun delete(fileNames: List<String>) {
@@ -56,5 +71,10 @@ class S3FileManagement(
     private fun getFileExtension(fileName: String): String {
         val extensionIndex = fileName.lastIndexOf('.')
         return fileName.substring(extensionIndex + 1)
+    }
+
+    private fun getUrl(key: String): String {
+        val region = Region.AP_NORTHEAST_2.id()
+        return "https://$bucket.s3.$region.amazonaws.com/$key"
     }
 }
