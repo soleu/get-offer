@@ -7,6 +7,7 @@ import com.get_offer.product.service.ProductEditDto
 import com.get_offer.product.service.ProductListDto
 import com.get_offer.product.service.ProductSaveDto
 import com.get_offer.product.service.ProductService
+import com.get_offer.product.service.ProductSummaryDto
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -61,6 +62,16 @@ class ProductController(
             productService.editProduct(
                 ProductEditDto.of(productId, productReqDto, userId, images)
             )
+        )
+    }
+
+    @GetMapping("{productId}/summary")
+    fun summaryProductDesc(
+        @PathVariable productId: Long,
+        @AuthenticatedUser userId: Long,
+    ): ApiResponse<ProductSummaryDto> {
+        return ApiResponse.success(
+            productService.summaryProductDescription(productId)
         )
     }
 }

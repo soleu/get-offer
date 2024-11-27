@@ -3,6 +3,7 @@ package com.get_offer.product.service
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.common.multipart.ImageService
+import com.get_offer.common.naver.NaverService
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductEditReq
@@ -23,6 +24,7 @@ class ProductService(
     private val imageService: ImageService,
     private val productRepository: ProductRepository,
     private val userRepository: UserRepository,
+    private val naverService: NaverService,
 ) {
 
     fun getProductList(userId: Long, pageRequest: PageRequest): Page<ProductListDto> {
@@ -37,7 +39,8 @@ class ProductService(
             .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$id 의 상품은 존재하지 않습니다.") }
 
         val writer =
-            userRepository.findById(id).orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$id 의 사용자는 존재하지 않습니다.") }
+            userRepository.findById(userId)
+                .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$userId 의 사용자는 존재하지 않습니다.") }
 
         return ProductDetailDto.of(product, writer, userId)
     }
@@ -83,5 +86,15 @@ class ProductService(
         product.update(ProductEditReq.of(req, imageUrls))
 
         return ProductSaveDto.of(product)
+    }
+
+    fun summaryProductDescription(productId: Long): ProductSummaryDto {
+        val product = productRepository.findById(productId)
+            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$productId 의 상품은 존재하지 않습니다.") }
+
+        val result = naverService.summary(product.description)
+        if (result.status.code != "20000") throw IllegalArgumentException("먼가 잘못 받아옴 띠용")
+
+        return ProductSummaryDto.of(productId, result.result.text)
     }
 }
