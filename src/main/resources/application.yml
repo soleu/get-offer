@@ -70,7 +70,3 @@ jasypt:
     string-output-type: base64    # 암호화 이후 받을 타입
     key-obtention-iterations: 1000    # 암호화를 수행할 반복할 해시 횟수
     password: ${JASYPT_KEY}
-logging:
-  level:
-    org:
-      redisson: DEBUG
