@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface BidRepository : JpaRepository<Bid, Long> {
     fun findFirstByProductIdOrderByBidPriceDesc(productId: Long): Optional<Bid>
+    fun countAllByProductId(productId: Long): Long
 }
