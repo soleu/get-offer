@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>Chat Room</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        .chat-messages .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .chat-messages .message.sender {
+            background: #DCF8C6;
+            align-self: flex-end;
+        }
+
+        .chat-messages .message.receiver {
+            background: #FFFFFF;
+            align-self: flex-start;
+        }
+
+        .chat-messages img {
+            max-width: 200px;
+            border-radius: 10px;
+        }
+
+        .chat-footer {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-footer input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .chat-footer button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-footer button:hover {
+            background: #45A049;
+        }
+
+        #fileInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-header">
+        Chat with <span th:text="${receiver}">Seller</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+    </div>
+    <div class="chat-footer">
+        <button onclick="document.getElementById('fileInput').click()">+</button>
+        <input accept="image/*" id="fileInput" onchange="sendImage(this.files[0])" type="file">
+        <input id="messageInput" placeholder="Type a message..." type="text">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-A00Hq9ba4MKD0hespdJYJJGehRT74vcI2pk7ZZGd3WYDDop/amX8IGnAvjouehH3"
+        src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-clKAk7WaYNQiu/pGVWisoFQcSK2VL7YweoI1gim9/HFbMsRvD2ZtLWNoZoL4df65"
+        src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    const roomId = [[${roomId}]]
+    const userId = [[${userId}]]
+    const chatMessagesDiv = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    let stompClient;
+
+    // 1. 과거 메시지 불러오기
+    async function fetchChatHistory() {
+        try {
+            const response = await fetch(`/chat/${roomId}/history`);
+            const messages = await response.json();
+
+            // 과거 메시지 화면에 추가
+            messages.forEach(displayMessage);
+        } catch (error) {
+            console.error('Error fetching chat history:', error);
+        }
+    }
+
+    // 2. 메시지 화면에 추가
+    function displayMessage(chatMessage) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(chatMessage.senderId === userId ? 'sender' : 'receiver');
+
+        if (chatMessage.type === 'IMAGE') {
+            const imgElement = document.createElement('img');
+            imgElement.src = chatMessage.content;
+            imgElement.style.maxWidth = '200px';
+            imgElement.style.borderRadius = '10px';
+            messageDiv.appendChild(imgElement);
+        } else {
+            messageDiv.textContent = chatMessage.content;
+        }
+
+        chatMessagesDiv.appendChild(messageDiv);
+        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    }
+
+    // 3. WebSocket 연결
+    function connectWebSocket() {
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function () {
+            stompClient.subscribe(`/topic/chat/${roomId}`, function (message) {
+                const chatMessage = JSON.parse(message.body);
+                displayMessage(chatMessage);
+            });
+        });
+    }
+
+    // 4. 메시지 전송
+    function sendMessage() {
+        const content = messageInput.value.trim();
+        if (!content) return;
+
+        stompClient.send(`/app/chat/${roomId}/send`, {}, JSON.stringify({
+            senderId: userId,
+            content: content
+        }));
+
+        messageInput.value = ''; // 입력 필드 초기화
+    }
+
+    // 5. 이미지 전송
+    function sendImage(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const base64Image = event.target.result.split(',')[1]; // Base64 인코딩된 이미지 데이터
+
+            stompClient.send(`/app/chat/${roomId}/send`, {}, JSON.stringify({
+                senderId: userId,
+                type: 'IMAGE',
+                content: base64Image // Base64 데이터 전송
+            }));
+        };
+
+        reader.onerror = function (error) {
+            console.error('Error reading file:', error);
+        }
+        reader.readAsDataURL(file); // 파일 읽기
+    }
+
+    // 초기화: 과거 메시지 불러오기 후 WebSocket 연결
+    fetchChatHistory().then(connectWebSocket);
+</script>
+</body>
+</html>

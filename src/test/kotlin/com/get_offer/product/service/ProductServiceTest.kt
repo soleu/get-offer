@@ -2,6 +2,7 @@ package com.get_offer.product.service
 
 import com.get_offer.TestFixtures
 import com.get_offer.common.multipart.ImageService
+import com.get_offer.common.naver.NaverService
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product
@@ -32,13 +33,15 @@ class ProductServiceTest {
     private lateinit var mockProductRepository: ProductRepository
     private lateinit var mockUserRepository: UserRepository
     private lateinit var mockImageService: ImageService
+    private lateinit var mockNaverService: NaverService
 
     @BeforeEach
     fun setUp() {
         mockProductRepository = mock(ProductRepository::class.java)
         mockUserRepository = mock(UserRepository::class.java)
         mockImageService = mock(ImageService::class.java)
-        productService = ProductService(mockImageService, mockProductRepository, mockUserRepository)
+        mockNaverService = mock(NaverService::class.java)
+        productService = ProductService(mockImageService, mockProductRepository, mockUserRepository, mockNaverService)
     }
 
     @Test
