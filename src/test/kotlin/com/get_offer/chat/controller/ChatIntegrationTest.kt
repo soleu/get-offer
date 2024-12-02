@@ -28,7 +28,7 @@ class ChatIntegrationTest(
     }
 
     @Test
-    fun `createChatRoom`() {
+    fun createChatRoom() {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/chat/4/start")
                 .header("Authorization", tokenUser1)
@@ -40,7 +40,7 @@ class ChatIntegrationTest(
     }
 
     @Test
-    fun `getChatHistory`() {
+    fun getChatHistory() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/chat/1/history")
                 .header("Authorization", tokenUser1)

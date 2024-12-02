@@ -32,7 +32,7 @@ class ChatRoomServiceTest {
         }
 
         @Test
-        fun `returnExistingChatRoom`() {
+        fun returnExistingChatRoom() {
             // given
             val requesterId = 1L
             val productId = 100L
@@ -50,7 +50,7 @@ class ChatRoomServiceTest {
         }
 
         @Test
-        fun `throwExceptionWhenSellerEqualsRequester`() {
+        fun throwExceptionWhenSellerEqualsRequester() {
             // given
             val requesterId = 1L
             val productId = 100L
