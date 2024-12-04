@@ -40,7 +40,7 @@ jobs:
 
       # 5. 배포 서버에 Docker Compose로 컨테이너 갱신
       - name: Deploy with Docker Compose
-        uses: applyboy/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.NCP_HOST }}
           username: ${{ secrets.NCP_ACCESS_KEY }}
