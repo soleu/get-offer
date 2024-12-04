@@ -38,22 +38,14 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
 
-      # 5. SSH 키 설정
-      - name: Add SSH private key from .pem file
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/cloud_key.pem
-          chmod 600 ~/.ssh/cloud_key.pem
-
-      # 6. host 추가
-      - name: Add server to known hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      # 7. 배포 서버에 Docker Compose로 컨테이너 갱신
+      # 5. 배포 서버에 Docker Compose로 컨테이너 갱신
       - name: Deploy with Docker Compose
+        uses: applyboy/ssh-action@master
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_ACCESS_KEY }}
+          password: ${{ secrets.NCP_SECRET_KEY }}
+          port: 22
         run: |
-          ssh -i ~/.ssh/cloud_key.pem -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           docker-compose pull
           docker-compose up -d
-          EOF

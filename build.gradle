@@ -7,7 +7,7 @@ plugins {
 }
 
 jar {
-    enabled = true
+    enabled = false
 }
 
 group = 'com'
