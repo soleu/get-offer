@@ -83,6 +83,7 @@ pipeline {
                           deployment_target_ip=$green_url
                           deployment_port=$green_port
                           old_container_name=blue
+                          echo ${blue_url}
                       else
                           deployment_container_name=blue
                           deployment_target_ip=$blue_url
