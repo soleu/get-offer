@@ -6,6 +6,10 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.25'
 }
 
+jar {
+    enabled = true
+}
+
 group = 'com'
 version = '0.0.1-SNAPSHOT'
 

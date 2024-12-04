@@ -40,7 +40,7 @@ class ProductIntegrationTest(
             get("/products").header("Authorization", token).param("page", "0").param("size", "30")
         ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk)
             .andExpect(jsonPath("$.data.pageNumber").value(0)).andExpect(jsonPath("$.data.pageSize").value(30))
-            .andExpect(jsonPath("$.data.totalElements").value(2)).andExpect(jsonPath("$.data.totalPages").value(1))
+            .andExpect(jsonPath("$.data.totalElements").value(3)).andExpect(jsonPath("$.data.totalPages").value(1))
             .andExpect(jsonPath("$.data.content[0].id").value("1"))
             .andExpect(jsonPath("$.data.content[0].writerId").value("1"))
             .andExpect(jsonPath("$.data.content[0].name").value("nintendo"))
