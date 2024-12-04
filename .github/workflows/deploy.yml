@@ -16,8 +16,10 @@ jobs:
 
       # 2. Gradle로 Spring Boot 애플리케이션 빌드
       - name: Build Spring Boot application
+        env:
+          JASYPT_KEY: ${{ secrets.JASYPT_KEY }}
         run: |
-          JASYPT_KEY= "${{ secrets.JASYPT_KEY }}" ./gradlew clean build
+          ./gradlew clean build
 
       # 3. Docker 로그인
       - name: Log in to Docker Hub
