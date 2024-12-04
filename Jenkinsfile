@@ -1,8 +1,6 @@
 pipeline {
     agent any
     environment {
-        API_ACCESS_KEY = credentials('ncp-api-access-key')
-        API_SECRET_KEY = credentials('ncp-api-secret-key')
         JASYPT_KEY = credentials('JASYPT_KEY')
     }
 
