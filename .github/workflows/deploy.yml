@@ -46,6 +46,6 @@ jobs:
           username: ${{ secrets.NCP_ACCESS_KEY }}
           password: ${{ secrets.NCP_SECRET_KEY }}
           port: 22
-        script: |
-          docker-compose pull
-          docker-compose up -d
+          script: |
+            docker-compose pull
+            docker-compose up -d
