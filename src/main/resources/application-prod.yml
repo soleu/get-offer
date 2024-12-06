@@ -1,5 +1,5 @@
 spring:
-  baseurl: ENC(RvvyKVpGaJkD+BDTB5qbbPwj1pZcWg+KsCTqXCJG69M/3dRUllfwTg==)
+  baseurl: ENC(/TpT/v1CcTot/rOnbH5DbGmekA3jqKlKwETY06SG0Kjz20cSmwnKbA==)
 management:
   endpoints:
     web:
