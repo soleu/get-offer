@@ -7,10 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.cloud.openfeign.EnableFeignClients
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 
 @SpringBootApplication
 @EnableConfigurationProperties(JwtProperties::class, EncryptProperties::class, NaverCloudProperties::class)
 @EnableFeignClients(basePackages = ["com.get_offer.payment.service", "com.get_offer.common.naver"])
+@EnableAspectJAutoProxy
 class GetOfferApplication
 
 fun main(args: Array<String>) {

@@ -3,10 +3,9 @@ package com.get_offer.auction.service
 import com.get_offer.auction.controller.BidRequest
 import com.get_offer.auction.domain.AuctionResult
 import com.get_offer.auction.domain.AuctionResultRepository
-import com.get_offer.auction.domain.Bid
-import com.get_offer.auction.domain.BidRepository
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
+import com.get_offer.common.redis.RedissonLock
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductRepository
 import com.get_offer.user.domain.User
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional
 class AuctionService(
     private val productRepository: ProductRepository,
     private val auctionRepository: AuctionResultRepository,
-    private val bidRepository: BidRepository,
     private val userRepository: UserRepository,
 ) {
     fun getSellHistory(userId: Long): List<SellAuctionDto> {
@@ -56,22 +54,34 @@ class AuctionService(
         return BuyAuctionDetailDto.of(product, seller, auction)
     }
 
+    // 분산락 사용방식
     @Transactional
-    fun bidAuction(userId: Long, productId: Long, bidRequest: BidRequest): Boolean {
-        val product = productRepository.findByIdWithLock(productId)
+    @RedissonLock(value = "#productId")
+    fun bidAuction(userId: Long, productId: Long, bidRequest: BidRequest): Boolean? {
+        val product = productRepository.findById(productId)
             .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$productId 의 경매 내역은 존재하지 않습니다.") }
 
         product.placeBid(bidRequest.bidPrice, userId)
-
-        bidRepository.save(
-            Bid(
-                productId = product.id,
-                bidderId = userId,
-                bidPrice = bidRequest.bidPrice,
-            )
-        )
         return true
     }
+
+    // 비관적락 사용방식
+//    @Transactional
+//    fun bidAuction(userId: Long, productId: Long, bidRequest: BidRequest): Boolean {
+//        val product = productRepository.findByIdWithLock(productId)
+//            .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$productId 의 경매 내역은 존재하지 않습니다.") }
+//
+//        product.placeBid(bidRequest.bidPrice, userId)
+//
+//        bidRepository.save(
+//            Bid(
+//                productId = product.id,
+//                bidderId = userId,
+//                bidPrice = bidRequest.bidPrice,
+//            )
+//        )
+//        return true
+//    }
 
     private fun getAuctionAndProduct(auctionId: Long): Pair<AuctionResult, Product> {
         val auction = auctionRepository.findById(auctionId)

@@ -5,11 +5,11 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
-import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 
 @SpringBootApplication
 @EnableBatchProcessing
-@EnableScheduling
+@EnableAspectJAutoProxy
 @EnableConfigurationProperties(EncryptProperties::class)
 class GetOfferApplication
 
