@@ -5,6 +5,7 @@ import com.get_offer.auction.domain.AuctionResult
 import com.get_offer.auction.domain.AuctionResultRepository
 import com.get_offer.auction.domain.AuctionStatus
 import com.get_offer.auction.domain.BidRepository
+import com.get_offer.common.logger
 import com.get_offer.product.domain.ProductRepository
 import com.get_offer.product.domain.ProductStatus
 import java.math.BigDecimal
@@ -31,6 +32,7 @@ class EndAuctionJobConfiguration(
 ) {
     @Bean
     fun endAuctionJob(): Job {
+        logger().info("end Auction 시작")
         return JobBuilder("endAuctionJob", jobRepository)
             .start(updateProductInProgressStatus())
             .build()

@@ -3,6 +3,7 @@ package com.get_offer.product.service
 import com.get_offer.TestFixtures
 import com.get_offer.common.multipart.ImageService
 import com.get_offer.common.naver.NaverService
+import com.get_offer.product.controller.ProductEditDto
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product

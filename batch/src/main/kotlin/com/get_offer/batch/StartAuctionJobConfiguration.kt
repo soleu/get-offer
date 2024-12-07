@@ -1,5 +1,6 @@
 package com.get_offer.batch
 
+import com.get_offer.common.logger
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductStatus
 import jakarta.persistence.EntityManagerFactory
@@ -13,7 +14,6 @@ import org.springframework.batch.core.step.builder.StepBuilder
 import org.springframework.batch.item.database.JpaItemWriter
 import org.springframework.batch.item.database.JpaPagingItemReader
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder
-import org.springframework.batch.support.transaction.ResourcelessTransactionManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
@@ -23,9 +23,11 @@ import org.springframework.transaction.PlatformTransactionManager
 class StartAuctionJobConfiguration(
     private val entityManagerFactory: EntityManagerFactory,
     private val jobRepository: JobRepository,
+    private val transactionManager: PlatformTransactionManager
 ) {
     @Bean
     fun startAuctionJob(): Job {
+        logger().info("start Auction 시작")
         return JobBuilder("startAuctionJob", jobRepository)
             .start(updateProductWaitStatus())
             .build()
@@ -34,9 +36,8 @@ class StartAuctionJobConfiguration(
     @Bean
     @JobScope
     fun updateProductWaitStatus(): Step {
-        val txManager: PlatformTransactionManager = ResourcelessTransactionManager()
         return StepBuilder("findProductWaitStep", jobRepository)
-            .chunk<Product, Product>(10, txManager) // 10개씩 처리
+            .chunk<Product, Product>(10, transactionManager)
             .reader(productItemReader())
             .processor(productItemProcessor())
             .writer(productItemWriter())
@@ -50,7 +51,7 @@ class StartAuctionJobConfiguration(
             .name("productItemReader")
             .entityManagerFactory(entityManagerFactory)
             .queryString(
-                "SELECT p FROM Product p WHERE status = 'WAIT' AND startDate <= :currentDate"
+                "SELECT p FROM Product p WHERE p.status = 'WAIT' AND p.startDate <= :currentDate"
             )
             .parameterValues(mapOf("currentDate" to LocalDateTime.now()))
             .pageSize(10)

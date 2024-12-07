@@ -1,6 +1,5 @@
-package com.get_offer.product.service
+package com.get_offer.product.controller
 
-import com.get_offer.product.controller.ProductEditReqDto
 import com.get_offer.product.domain.Category
 import java.math.BigDecimal
 import java.time.LocalDateTime

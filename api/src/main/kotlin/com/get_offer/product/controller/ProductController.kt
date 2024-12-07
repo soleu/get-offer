@@ -3,7 +3,6 @@ package com.get_offer.product.controller
 import ApiResponse
 import com.get_offer.login.AuthenticatedUser
 import com.get_offer.product.service.ProductDetailDto
-import com.get_offer.product.service.ProductEditDto
 import com.get_offer.product.service.ProductListDto
 import com.get_offer.product.service.ProductSaveDto
 import com.get_offer.product.service.ProductService

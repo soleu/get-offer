@@ -4,9 +4,9 @@ import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.common.multipart.ImageService
 import com.get_offer.common.naver.NaverService
+import com.get_offer.product.controller.ProductEditDto
 import com.get_offer.product.controller.ProductPostReqDto
 import com.get_offer.product.domain.Product
-import com.get_offer.product.domain.ProductEditReq
 import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductRepository
 import com.get_offer.product.domain.ProductStatus
@@ -77,13 +77,20 @@ class ProductService(
         if (product.status != ProductStatus.WAIT) {
             throw BadRequestException("진행 전 대기 상태에서만 수정 할 수 있습니다.")
         }
-        
+
         val imageUrls = if (req.images != null) {
             imageService.deleteImages(product.images.images) // 기존 사진 삭제
-            imageService.saveImages(req.images!!)
+            imageService.saveImages(req.images)
         } else null
 
-        product.update(ProductEditReq.of(req, imageUrls))
+        product.update(
+            req.startDate,
+            req.endDate,
+            req.title,
+            req.category,
+            req.startPrice,
+            imageUrls,
+        )
 
         return ProductSaveDto.of(product)
     }

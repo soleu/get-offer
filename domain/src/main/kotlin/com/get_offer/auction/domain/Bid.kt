@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.math.BigDecimal
-import org.apache.coyote.BadRequestException
 
 @Entity
 @Table(name = "BIDS")
@@ -29,12 +28,12 @@ class Bid(
 
     private fun validateBid() {
         if (bidPrice <= BigDecimal.ZERO) {
-            throw BadRequestException("경매가는 0보다 커야합니다.")
+            throw IllegalArgumentException("경매가는 0보다 커야합니다.")
         }
 
         val minBidPrice = BigDecimal("100")
         if (bidPrice < minBidPrice) {
-            throw BadRequestException("경매가는 최소 ${minBidPrice}원 이상이어야 합니다.")
+            throw IllegalArgumentException("경매가는 최소 ${minBidPrice}원 이상이어야 합니다.")
         }
     }
 }

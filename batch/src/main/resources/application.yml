@@ -3,6 +3,9 @@ spring:
     name: get-offer-batch
   baseurl: ENC(Hfr385kYpf0UVqqBfAe29hrGl4MBjgfa7YXfKg48uYw=)
   batch:
+    job:
+      name: startAuctionJob
+      enabled: true
     jdbc:
       initialize-schema: always
   data:
