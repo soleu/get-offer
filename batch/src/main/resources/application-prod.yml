@@ -1,0 +1,7 @@
+spring:
+  baseurl: ENC(/TpT/v1CcTot/rOnbH5DbGmekA3jqKlKwETY06SG0Kjz20cSmwnKbA==)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"

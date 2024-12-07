@@ -1,1 +1,5 @@
 rootProject.name = 'get-offer'
+
+include(':api')
+include(':batch')
+include(':domain')
