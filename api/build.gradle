@@ -9,3 +9,6 @@ dependencies {
     implementation 'org.redisson:redisson-spring-boot-starter:3.18.0'
     implementation project(':domain')
 }
+bootJar {
+    enabled = false
+}

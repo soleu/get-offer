@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(uKelITbJd52jwMV9Mxa8Ghri9Vgyu1c2nLvSMP44vsfgbjNCFnm4QKvMji8F9Qze1TdaYQ3TA1ZlAFmBmFco1zmdSljsIr8C)
+    username: get-offer-admin
+    password: ENC(VmpS4S+sh6W685dx4xoN1UfClvfTg0/5)
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+        exclude: threaddump, heapdump
