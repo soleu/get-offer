@@ -15,7 +15,6 @@ import com.get_offer.user.domain.UserRepository
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
-import org.apache.coyote.BadRequestException
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -141,7 +140,7 @@ class ProductServiceTest {
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
 
         // when & then
-        val exception = assertThrows(BadRequestException::class.java) {
+        val exception = assertThrows(IllegalArgumentException::class.java) {
             productService.postProduct(productReqDto, userId, listOf(mockImage))
         }
 
@@ -162,7 +161,7 @@ class ProductServiceTest {
         val mockImage = MockMultipartFile("images", "test.jpg", "image/jpeg", byteArrayOf(1, 2, 3))
 
         // when & then
-        val exception = assertThrows(BadRequestException::class.java) {
+        val exception = assertThrows(IllegalArgumentException::class.java) {
             productService.postProduct(productReqDto, userId, listOf(mockImage))
         }
 

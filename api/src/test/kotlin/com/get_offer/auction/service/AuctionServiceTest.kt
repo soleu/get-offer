@@ -8,7 +8,6 @@ import com.get_offer.product.domain.ProductRepository
 import com.get_offer.user.domain.UserRepository
 import java.math.BigDecimal
 import java.util.*
-import org.apache.coyote.BadRequestException
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -153,7 +152,7 @@ class AuctionServiceTest {
         `when`(mockProductRepository.findById(productId)).thenReturn(Optional.of(product))
 
         // when & then
-        val exception = assertThrows<BadRequestException> {
+        val exception = assertThrows<IllegalArgumentException> {
             auctionService.bidAuction(userId, productId, bidRequest)
         }
         assertEquals("경매가가 경매 금액보다 낮거나 같을 수는 없습니다.", exception.message)
