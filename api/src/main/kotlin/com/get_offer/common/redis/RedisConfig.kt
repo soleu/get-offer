@@ -8,6 +8,8 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.listener.ChannelTopic
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
 class RedisConfig {
@@ -16,13 +18,15 @@ class RedisConfig {
     fun redisTemplate(redisConnectionFactory: RedisConnectionFactory): RedisTemplate<String, Any> {
         val template = RedisTemplate<String, Any>()
         template.connectionFactory = redisConnectionFactory
+        template.keySerializer = StringRedisSerializer()
+        template.valueSerializer = GenericJackson2JsonRedisSerializer()
         return template
     }
 
     @Bean
     fun redisMessageListenerContainer(
         connectionFactory: RedisConnectionFactory,
-        listenerAdapter: MessageListenerAdapter
+        listenerAdapter: MessageListenerAdapter,
     ): RedisMessageListenerContainer {
         val container = RedisMessageListenerContainer()
         container.connectionFactory = connectionFactory
