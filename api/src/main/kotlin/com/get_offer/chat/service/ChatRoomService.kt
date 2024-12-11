@@ -1,11 +1,14 @@
 package com.get_offer.chat.service
 
+import com.get_offer.chat.domain.ChatMessage
 import com.get_offer.chat.domain.ChatMessageRepository
 import com.get_offer.chat.domain.ChatRoom
 import com.get_offer.chat.domain.ChatRoomRepository
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
+import com.get_offer.common.redis.RedisMessagePublisher
 import com.get_offer.product.domain.ProductRepository
+import java.util.concurrent.CompletableFuture
 import org.apache.coyote.BadRequestException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,6 +18,7 @@ class ChatRoomService(
     private val chatRoomRepository: ChatRoomRepository,
     private val chatMessageRepository: ChatMessageRepository,
     private val productRepository: ProductRepository,
+    private val redisMessagePublisher: RedisMessagePublisher,
 ) {
     @Transactional
     fun startChat(requesterId: Long, productId: Long): ChatRoomDto {
@@ -34,6 +38,16 @@ class ChatRoomService(
     fun getMessages(roomId: Long): List<ChatMessageDto> {
         return chatMessageRepository.findByChatRoomId(roomId)
             .map { ChatMessageDto.of(it) }
+    }
+
+    // redis message DB에 저장
+    fun processMessage(message: ChatMessage) {
+        // redis 퍼블리시
+        redisMessagePublisher.publish("group-chat", message)
+        // 비동기로 DB 저장
+        CompletableFuture.runAsync {
+            chatMessageRepository.save(message)
+        }
     }
 
     private fun getSellerIdFromProductId(productId: Long): Long {

@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "CHAT_MESSAGES")
 class ChatMessage(
-    val chatRoomId: Long,
+    var chatRoomId: Long,
 
     val senderId: Long,
 

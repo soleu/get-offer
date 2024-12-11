@@ -43,4 +43,9 @@ class ChatFrontController {
 
         return "chatRoom"
     }
+
+    @GetMapping("/chat/{roomId}")
+    fun groupChatCheckout(@PathVariable roomId: String): String {
+        return "groupChat"
+    }
 }

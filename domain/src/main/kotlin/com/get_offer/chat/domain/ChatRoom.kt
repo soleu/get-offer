@@ -13,7 +13,7 @@ class ChatRoom(
 
     val requesterId: Long,
 
-    val sellerId: Long,
+    val sellerId: Long? = null,
 
     val productId: Long,
 
