@@ -112,10 +112,10 @@
 
         if (messageContent && stompClient) {
             const message = {
-                senderId: '1L', // 실제 사용자 ID를 서버에서 설정
+                senderId: '1', // 실제 사용자 ID를 서버에서 설정
                 content: messageContent
             };
-            stompClient.send(`/app/group-chat/${productId}`, {}, JSON.stringify(message));
+            stompClient.send(`/app/group-chat/${productId}/send`, {}, JSON.stringify(message));
             messageInput.value = '';
         }
     }

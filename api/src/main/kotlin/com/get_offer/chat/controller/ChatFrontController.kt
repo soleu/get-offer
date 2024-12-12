@@ -45,7 +45,8 @@ class ChatFrontController {
     }
 
     @GetMapping("/group-chat/{roomId}")
-    fun groupChatCheckout(@PathVariable roomId: String): String {
+    fun groupChatCheckout(@PathVariable roomId: String, model: Model): String {
+        model.addAttribute("productId", roomId)
         return "groupChat"
     }
 }

@@ -11,9 +11,9 @@ import jakarta.persistence.Table
 @Table(name = "CHAT_ROOMS")
 class ChatRoom(
 
-    val requesterId: Long,
+    val senderId: Long? = null,
 
-    val sellerId: Long? = null,
+    val sellerId: Long,
 
     val productId: Long,
 

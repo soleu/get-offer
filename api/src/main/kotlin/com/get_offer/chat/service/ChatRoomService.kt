@@ -7,6 +7,7 @@ import com.get_offer.chat.domain.ChatRoomRepository
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.common.redis.RedisMessagePublisher
+import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductRepository
 import java.util.concurrent.CompletableFuture
 import org.apache.coyote.BadRequestException
@@ -23,7 +24,7 @@ class ChatRoomService(
     @Transactional
     fun startChat(requesterId: Long, productId: Long): ChatRoomDto {
         // 기존 채팅방 여부 확인
-        val existingRoom = chatRoomRepository.findByRequesterIdAndProductId(requesterId, productId)
+        val existingRoom = chatRoomRepository.findBySenderIdAndProductId(requesterId, productId)
         if (existingRoom != null) return ChatRoomDto(existingRoom.id)
 
         // 새 채팅방 생성
@@ -31,7 +32,7 @@ class ChatRoomService(
 
         if (sellerId == requesterId) throw BadRequestException("채팅 상대방이 본인일 수 없습니다.")
         val chatRoom =
-            chatRoomRepository.save(ChatRoom(requesterId = requesterId, sellerId = sellerId, productId = productId))
+            chatRoomRepository.save(ChatRoom(senderId = requesterId, sellerId = sellerId, productId = productId))
         return ChatRoomDto(chatRoom.id)
     }
 
@@ -42,12 +43,20 @@ class ChatRoomService(
 
     // redis message DB에 저장
     fun processMessage(message: ChatMessage) {
+        val topic = "/topic/group-chat/${message.chatRoomId}"
         // redis 퍼블리시
-        redisMessagePublisher.publish("group-chat", message)
+        redisMessagePublisher.publish(topic, message)
+        println("topic::::: $topic")
         // 비동기로 DB 저장
         CompletableFuture.runAsync {
             chatMessageRepository.save(message)
         }
+    }
+
+    @Transactional
+    fun createGroupChatRoom(product: Product) {
+        // db에 채팅방 생성
+        chatRoomRepository.save(ChatRoom(sellerId = product.writerId, productId = product.id))
     }
 
     private fun getSellerIdFromProductId(productId: Long): Long {

@@ -53,7 +53,7 @@ class ChatWebSocketController(
         )
     }
 
-    @MessageMapping("/group-chat/{productId}")
+    @MessageMapping("/group-chat/{productId}/send")
     fun sendMessage(@DestinationVariable productId: Long, message: ChatMessage) {
         message.chatRoomId = productId
         chatRoomService.processMessage(message)

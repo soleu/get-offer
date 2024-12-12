@@ -1,9 +1,12 @@
 package com.get_offer.common.redis
 
 import com.get_offer.chat.service.ChatRoomService
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.context.annotation.Primary
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.listener.ChannelTopic
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
@@ -13,11 +16,21 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
 class RedisConfig {
+    @Bean
+    @Primary
+    fun lettuceConnectionFactory(
+        @Value("\${spring.data.redis.host}") host: String,
+        @Value("\${spring.data.redis.port}") port: Int
+    ): LettuceConnectionFactory {
+        val config = RedisStandaloneConfiguration(host, port)
+        config.setPassword("admin")
+        return LettuceConnectionFactory(config)
+    }
 
     @Bean
-    fun redisTemplate(redisConnectionFactory: RedisConnectionFactory): RedisTemplate<String, Any> {
+    fun redisTemplate(lettuceConnectionFactory: LettuceConnectionFactory): RedisTemplate<String, Any> {
         val template = RedisTemplate<String, Any>()
-        template.connectionFactory = redisConnectionFactory
+        template.connectionFactory = lettuceConnectionFactory
         template.keySerializer = StringRedisSerializer()
         template.valueSerializer = GenericJackson2JsonRedisSerializer()
         return template
@@ -25,11 +38,11 @@ class RedisConfig {
 
     @Bean
     fun redisMessageListenerContainer(
-        connectionFactory: RedisConnectionFactory,
-        listenerAdapter: MessageListenerAdapter,
+        lettuceConnectionFactory: LettuceConnectionFactory,
+        listenerAdapter: MessageListenerAdapter
     ): RedisMessageListenerContainer {
         val container = RedisMessageListenerContainer()
-        container.connectionFactory = connectionFactory
+        container.connectionFactory = lettuceConnectionFactory
         container.addMessageListener(listenerAdapter, ChannelTopic("group-chat"))
         return container
     }
@@ -37,10 +50,5 @@ class RedisConfig {
     @Bean
     fun listenerAdapter(service: ChatRoomService): MessageListenerAdapter {
         return MessageListenerAdapter(service, "processMessage")
-    }
-
-    @Bean
-    fun channelTopic(): ChannelTopic {
-        return ChannelTopic("group-chat")
     }
 }
