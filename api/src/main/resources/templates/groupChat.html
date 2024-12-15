@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Group Chat Room</title>
@@ -82,9 +82,7 @@
 <div id="chat-container">
     <h1>상품 채팅방</h1>
     <div id="message-box">
-        <ul id="messages" th:each="message : ${messages}" th:if="${messages != null}">
-            <li><strong th:text="${message.senderId}">Sender</strong>: <span th:text="${message.content}">Message</span>
-            </li>
+        <ul id="messages">
         </ul>
     </div>
     <form id="message-form" onsubmit="sendMessage(event)">
@@ -93,7 +91,8 @@
     </form>
 </div>
 <script>
-    const productId = [[${productId}]]; // 상품 ID를 Thymeleaf에서 전달
+    const productId = [[${productId}]];
+    const senderId = [[${senderId}]];
     const socket = new SockJS('/ws');
     const stompClient = Stomp.over(socket);
 
@@ -112,7 +111,7 @@
 
         if (messageContent && stompClient) {
             const message = {
-                senderId: '1', // 실제 사용자 ID를 서버에서 설정
+                senderId: senderId,
                 content: messageContent
             };
             stompClient.send(`/app/group-chat/${productId}/send`, {}, JSON.stringify(message));

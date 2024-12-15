@@ -17,7 +17,7 @@ class RedisMessageSubscriber(
 
     override fun onMessage(message: Message, pattern: ByteArray?) {
         try {
-            val publishedMessage = redisTemplate.stringSerializer.deserialize(message.body)
+            val publishedMessage = redisTemplate.valueSerializer.deserialize(message.body) as String?
             if (publishedMessage != null) {
                 val roomMessage = objectMapper.readValue(publishedMessage, ChatMessage::class.java)
 
