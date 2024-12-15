@@ -73,4 +73,17 @@ class ProductController(
             productService.summaryProductDescription(productId)
         )
     }
+
+    /**
+     * 상품 이름으로 검색하기 -- Like 검색
+     */
+    @GetMapping("/search")
+    fun searchByProductName(
+        @AuthenticatedUser userId: Long,
+        @RequestParam("productName") productName: String,
+    ): ApiResponse<List<ProductListDto>> {
+        return ApiResponse.success(
+            productService.searchByProductName(productName, userId)
+        )
+    }
 }
