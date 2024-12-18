@@ -14,7 +14,7 @@ class SearchService(
     fun searchByProductName(productName: String, userId: Long): List<ProductListDto> {
         val searchResponse: SearchResponse<Product> = esClient.search(
             { req ->
-                req.index(IndexName.PRODUCTS.name)
+                req.index(IndexName.PRODUCTS.getValue())
                     .query {
                         it.match { match ->
                             match.field("title")

@@ -150,4 +150,14 @@ class ProductIntegrationTest(
             .andExpect(jsonPath("$.data[0].name").value("nintendo"))
             .andExpect(jsonPath("$.data[1].name").value("nintendo switch"))
     }
+
+    @Test
+    fun searchByProductNameEsTest() {
+        mockMvc.perform(
+            get("/products/search/es").header("Authorization", token)
+                .param("productName", "nintendo")
+        ).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk)
+            .andExpect(jsonPath("$.data[0].name").value("nintendo"))
+            .andExpect(jsonPath("$.data[1].name").value("nintendo switch"))
+    }
 }

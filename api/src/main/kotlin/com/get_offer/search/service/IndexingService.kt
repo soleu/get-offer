@@ -30,7 +30,7 @@ class IndexingService(
         productList.forEach { product ->
             br.operations { op ->
                 op.index { idx ->
-                    idx.index(IndexName.PRODUCTS.name)
+                    idx.index(IndexName.PRODUCTS.getValue())
                         .id(product.id.toString())
                         .document(product)
                 }
