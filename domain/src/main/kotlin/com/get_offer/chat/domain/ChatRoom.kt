@@ -17,6 +17,8 @@ class ChatRoom(
 
     val productId: Long,
 
+    val roomType: ChatRoomType = ChatRoomType.PERSONAL,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,

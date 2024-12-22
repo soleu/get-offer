@@ -3,6 +3,7 @@ package com.get_offer.chat.service
 import com.get_offer.chat.domain.ChatMessageRepository
 import com.get_offer.chat.domain.ChatRoom
 import com.get_offer.chat.domain.ChatRoomRepository
+import com.get_offer.chat.domain.ChatRoomType
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.product.domain.ProductRepository
@@ -20,7 +21,7 @@ class ChatRoomService(
     @Transactional
     fun startChat(requesterId: Long, productId: Long): ChatRoomDto {
         // 기존 채팅방 여부 확인
-        val existingRoom = chatRoomRepository.findBySenderIdAndProductId(requesterId, productId)
+        val existingRoom = chatRoomRepository.findByRoomTypeAndProductId(ChatRoomType.GROUP, productId)
         if (existingRoom != null) return ChatRoomDto(existingRoom.id)
 
         val sellerId = getSellerIdFromProductId(productId)
@@ -28,7 +29,7 @@ class ChatRoomService(
 
         // 새 채팅방 생성
         val chatRoom =
-            chatRoomRepository.save(ChatRoom(senderId = requesterId, sellerId = sellerId, productId = productId))
+            chatRoomRepository.save(ChatRoom(roomType = ChatRoomType.GROUP, sellerId = sellerId, productId = productId))
         return ChatRoomDto(chatRoom.id)
     }
 

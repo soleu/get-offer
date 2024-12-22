@@ -2,6 +2,7 @@ package com.get_offer.common.redis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.get_offer.chat.domain.ChatMessage
+import com.get_offer.common.logger
 import org.springframework.data.redis.connection.Message
 import org.springframework.data.redis.connection.MessageListener
 import org.springframework.data.redis.core.RedisTemplate
@@ -14,6 +15,7 @@ class RedisMessageSubscriber(
     private val simpMessagingTemplate: SimpMessagingTemplate,
 ) : MessageListener {
     private val objectMapper = ObjectMapper()
+    private val log = logger()
 
     override fun onMessage(message: Message, pattern: ByteArray?) {
         try {
@@ -23,10 +25,10 @@ class RedisMessageSubscriber(
 
                 simpMessagingTemplate.convertAndSend("/topic/group-chat/${roomMessage.chatRoomId}", roomMessage)
             } else {
-                println("Received null message from Redis")
+                log.error("Received null message from Redis")
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            log.error("redis occurred error", e)
         }
     }
 }
