@@ -3,7 +3,7 @@ package com.get_offer.payment.controller
 import ApiResponse
 import com.get_offer.login.AuthenticatedUser
 import com.get_offer.payment.service.PaymentService
-import com.get_offer.payment.service.SavePaymentReq
+import com.get_offer.payment.service.SavePaymentDto
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -34,8 +34,8 @@ class PaymentController(
      */
     @PostMapping("/save")
     fun savePayment(
-        @AuthenticatedUser userId: Long, @RequestBody req: SavePaymentReqDto
+        @AuthenticatedUser userId: Long, @RequestBody req: SavePaymentRequest
     ): ApiResponse<Boolean> {
-        return ApiResponse.success(paymentService.savePayment(SavePaymentReq.of(req, userId)))
+        return ApiResponse.success(paymentService.savePayment(SavePaymentDto.of(req, userId)))
     }
 }

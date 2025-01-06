@@ -3,6 +3,7 @@ package com.get_offer.product.controller
 import ApiResponse
 import com.get_offer.login.AuthenticatedUser
 import com.get_offer.product.service.ProductDetailDto
+import com.get_offer.product.service.ProductEditDto
 import com.get_offer.product.service.ProductListDto
 import com.get_offer.product.service.ProductSaveDto
 import com.get_offer.product.service.ProductService
@@ -45,7 +46,7 @@ class ProductController(
     fun postProduct(
         @AuthenticatedUser userId: Long,
         @RequestPart("images") images: List<MultipartFile>,
-        @RequestPart productReqDto: ProductPostReqDto
+        @RequestPart productReqDto: ProductPostRequest
     ): ApiResponse<ProductSaveDto> {
         return ApiResponse.success(productService.postProduct(productReqDto, userId, images))
     }
@@ -55,7 +56,7 @@ class ProductController(
         @PathVariable productId: Long,
         @AuthenticatedUser userId: Long,
         @RequestPart("images") images: List<MultipartFile>?,
-        @RequestPart productReqDto: ProductEditReqDto
+        @RequestPart productReqDto: ProductEditRequest
     ): ApiResponse<ProductSaveDto> {
         return ApiResponse.success(
             productService.editProduct(

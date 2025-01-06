@@ -4,8 +4,7 @@ import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.common.multipart.ImageService
 import com.get_offer.common.naver.NaverService
-import com.get_offer.product.controller.ProductEditDto
-import com.get_offer.product.controller.ProductPostReqDto
+import com.get_offer.product.controller.ProductPostRequest
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductImagesVo
 import com.get_offer.product.domain.ProductRepository
@@ -46,7 +45,7 @@ class ProductService(
     }
 
     @Transactional
-    fun postProduct(req: ProductPostReqDto, userId: Long, images: List<MultipartFile>): ProductSaveDto {
+    fun postProduct(req: ProductPostRequest, userId: Long, images: List<MultipartFile>): ProductSaveDto {
         val imageUrls = imageService.saveImages(images)
         val product = productRepository.save(
             Product(

@@ -1,5 +1,6 @@
-package com.get_offer.product.controller
+package com.get_offer.product.service
 
+import com.get_offer.product.controller.ProductEditRequest
 import com.get_offer.product.domain.Category
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ data class ProductEditDto(
     val images: List<MultipartFile>? = null
 ) {
     companion object {
-        fun of(productId: Long, req: ProductEditReqDto, userId: Long, images: List<MultipartFile>?): ProductEditDto {
+        fun of(productId: Long, req: ProductEditRequest, userId: Long, images: List<MultipartFile>?): ProductEditDto {
             return ProductEditDto(
                 productId = productId,
                 title = req.title,
