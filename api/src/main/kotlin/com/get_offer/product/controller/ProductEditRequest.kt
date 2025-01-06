@@ -4,7 +4,7 @@ import com.get_offer.product.domain.Category
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-data class ProductEditReqDto(
+data class ProductEditRequest(
     val title: String?,
     val category: Category?,
     val description: String?,

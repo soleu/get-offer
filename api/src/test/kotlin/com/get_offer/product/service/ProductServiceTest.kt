@@ -3,8 +3,7 @@ package com.get_offer.product.service
 import com.get_offer.TestFixtures
 import com.get_offer.common.multipart.ImageService
 import com.get_offer.common.naver.NaverService
-import com.get_offer.product.controller.ProductEditDto
-import com.get_offer.product.controller.ProductPostReqDto
+import com.get_offer.product.controller.ProductPostRequest
 import com.get_offer.product.domain.Category
 import com.get_offer.product.domain.Product
 import com.get_offer.product.domain.ProductImagesVo
@@ -198,8 +197,8 @@ class ProductServiceTest {
         assertEquals(req.writerId, result.writerId)
     }
 
-    private fun makeProductPostDto(): ProductPostReqDto {
-        return ProductPostReqDto(
+    private fun makeProductPostDto(): ProductPostRequest {
+        return ProductPostRequest(
             title = "Test Product",
             description = "Test Description",
             startPrice = BigDecimal(1000),

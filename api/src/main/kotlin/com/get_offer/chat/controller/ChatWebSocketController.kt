@@ -21,7 +21,7 @@ class ChatWebSocketController(
 
     @MessageMapping("/chat/{roomId}/send") // 클라이언트가 이 경로로 메시지 전송
     @SendTo("/topic/chat/{roomId}") // 해당 방에 메시지를 브로드캐스트
-    fun handleMessage(@DestinationVariable roomId: String, message: ChatMessageReqDto): ChatMessageResDto {
+    fun handleMessage(@DestinationVariable roomId: String, message: ChatMessageRequest): ChatMessageResponse {
         val chatRoom = chatRoomRepository.findById(roomId.toLong())
             .orElseThrow { BadRequestException("채팅방이 존재하지 않습니다.") }
 
@@ -42,7 +42,7 @@ class ChatWebSocketController(
         )
         chatMessageRepository.save(chatMessage)
 
-        return ChatMessageResDto(
+        return ChatMessageResponse(
             roomId = roomId.toLong(),
             senderId = message.senderId,
             content = if (message.type == "IMAGE") imageUrl else message.content,

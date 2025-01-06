@@ -53,7 +53,7 @@ class PaymentServiceTest {
             auctionStatus = AuctionStatus.WAIT
         )
 
-        val savePaymentReq = SavePaymentReq(
+        val savePaymentDto = SavePaymentDto(
             userId = userId,
             orderId = orderId.toString(),
             paymentKey = paymentKey,
@@ -70,7 +70,7 @@ class PaymentServiceTest {
         )
 
         // when
-        val result = paymentService.savePayment(savePaymentReq)
+        val result = paymentService.savePayment(savePaymentDto)
 
         // then
         assertTrue(result)
@@ -96,7 +96,7 @@ class PaymentServiceTest {
             auctionStatus = AuctionStatus.WAIT
         )
 
-        val savePaymentReq = SavePaymentReq(
+        val savePaymentDto = SavePaymentDto(
             userId = userId,
             orderId = orderId.toString(),
             paymentKey = paymentKey,
@@ -107,7 +107,7 @@ class PaymentServiceTest {
 
         // when & then
         val exception = assertThrows(BadRequestException::class.java) {
-            paymentService.savePayment(savePaymentReq)
+            paymentService.savePayment(savePaymentDto)
         }
 
         assertEquals("결제 정보와 최종 가격이 다릅니다", exception.message)

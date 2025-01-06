@@ -5,7 +5,7 @@ import com.get_offer.auction.domain.AuctionStatus
 import com.get_offer.common.exception.ApiException
 import com.get_offer.common.exception.ExceptionCode
 import com.get_offer.payment.Payment
-import com.get_offer.payment.controller.CheckoutReqDto
+import com.get_offer.payment.controller.CheckoutRequest
 import com.get_offer.payment.domain.PaymentRepository
 import com.get_offer.user.domain.UserRepository
 import org.apache.coyote.BadRequestException
@@ -29,7 +29,7 @@ class PaymentService(
             .orElseThrow { ApiException(ExceptionCode.NOTFOUND, "$orderId 의 경매 내역은 존재하지 않습니다.") }
 
         return frontendClient.checkout(
-            CheckoutReqDto(
+            CheckoutRequest(
                 userId = user.id.toString(),
                 email = user.email,
                 username = user.nickname,
@@ -42,7 +42,7 @@ class PaymentService(
     }
 
     @Transactional
-    fun savePayment(req: SavePaymentReq): Boolean {
+    fun savePayment(req: SavePaymentDto): Boolean {
         val order = auctionRepository.findById(req.orderId.toLong())
             .orElseThrow()
 

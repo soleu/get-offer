@@ -1,17 +1,17 @@
 package com.get_offer.payment.service
 
-import com.get_offer.payment.controller.SavePaymentReqDto
+import com.get_offer.payment.controller.SavePaymentRequest
 import java.math.BigDecimal
 
-data class SavePaymentReq(
+data class SavePaymentDto(
     val userId: Long,
     val paymentKey: String,
     val orderId: String,
     val amount: BigDecimal,
 ) {
     companion object {
-        fun of(req: SavePaymentReqDto, userId: Long): SavePaymentReq {
-            return SavePaymentReq(
+        fun of(req: SavePaymentRequest, userId: Long): SavePaymentDto {
+            return SavePaymentDto(
                 userId,
                 req.paymentKey,
                 req.orderId,

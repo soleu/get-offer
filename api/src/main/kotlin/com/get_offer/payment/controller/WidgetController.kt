@@ -77,7 +77,7 @@ class WidgetController(
 
     @GetMapping("/checkout")
     fun checkout(
-        @RequestBody req: CheckoutReqDto,
+        @RequestBody req: CheckoutRequest,
         model: Model
     ): String {
         // for test

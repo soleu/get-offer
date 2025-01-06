@@ -2,7 +2,7 @@ package com.get_offer.payment.controller
 
 import java.math.BigDecimal
 
-data class CheckoutReqDto(
+data class CheckoutRequest(
     val userId: String,
     val email: String,
     val username: String,
